@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080F25">
-<title>Tайна Рождества — Следуй за звездой</title>
+<title>Тайна Рождества — Следуй за звездой</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -27,15 +27,20 @@ body {
 
 main {
   width: 100%;
-  max-width: 620px;
-  padding: 25px 20px 40px;
+  max-width: 520px;
+  padding: 20px 10px 40px;
 }
 
 .language-switch {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-bottom: 35px;
+  margin-bottom: 30px;
+}
+
+button {
+  cursor: pointer;
+  font-size: 14px;
 }
 
 .language-switch button {
@@ -44,8 +49,6 @@ main {
   background: transparent;
   color: #d4d9e5;
   padding: 9px 17px;
-  font-size: 14px;
-  cursor: pointer;
 }
 
 .language-switch button.active {
@@ -57,28 +60,28 @@ main {
 
 .star {
   color: #E8BD65;
-  font-size: 82px;
+  font-size: 75px;
   text-shadow: 0 0 35px #E8BD65;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .name {
   color: #E8BD65;
-  font-size: 13px;
-  letter-spacing: 4px;
+  font-size: 12px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   line-height: 1.8;
 }
 
 h1 {
-  font-size: clamp(40px, 9vw, 66px);
+  font-size: clamp(38px, 9vw, 58px);
   line-height: 1.08;
-  margin: 23px 0 15px;
+  margin: 18px 0 12px;
   font-weight: normal;
 }
 
 .subtitle {
-  font-size: 18px;
+  font-size: 16px;
   letter-spacing: 3px;
   color: #E8BD65;
   line-height: 1.6;
@@ -86,39 +89,114 @@ h1 {
 
 .description {
   font-family: Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.9;
+  font-size: 15px;
+  line-height: 1.8;
   color: #d4d9e5;
-  margin: 32px auto;
-  max-width: 460px;
+  margin: 25px auto;
+  max-width: 440px;
 }
 
-.notice {
+.panel {
+  margin-top: 30px;
+  padding: 25px 20px;
   border: 1px solid #8e7548;
-  background: rgba(232, 189, 101, 0.08);
-  border-radius: 14px;
-  padding: 23px;
-  margin-top: 35px;
+  background: rgba(232, 189, 101, 0.06);
+  border-radius: 16px;
+  text-align: left;
+}
+
+.panel h2 {
+  text-align: center;
+  color: #E8BD65;
+  font-weight: normal;
+  margin: 0 0 22px;
+  font-size: 25px;
+}
+
+label {
+  display: block;
+  margin: 15px 0 7px;
+  color: #d4d9e5;
+  font: 13px Arial, sans-serif;
+}
+
+input {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #65718a;
+  border-radius: 8px;
+  background: #101a32;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #E8BD65;
+}
+
+.primary {
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px;
+  border: 0;
+  border-radius: 8px;
+  background: #E8BD65;
+  color: #080F25;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.primary:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.secondary {
+  display: block;
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  border: 0;
+  background: transparent;
+  color: #E8BD65;
+  text-decoration: underline;
+}
+
+.message {
+  margin-top: 15px;
+  font: 14px/1.6 Arial, sans-serif;
+  text-align: center;
+  color: #f3c979;
+  overflow-wrap: anywhere;
+}
+
+.hidden { display: none !important; }
+
+.welcome {
+  text-align: center;
   font-family: Arial, sans-serif;
   line-height: 1.8;
+  color: #d4d9e5;
 }
 
-.notice strong {
+.welcome strong {
   color: #E8BD65;
-  font-size: 17px;
+  font-size: 20px;
 }
 
 footer {
-  margin-top: 48px;
+  margin-top: 38px;
   color: #8994aa;
-  font: 12px Arial, sans-serif;
+  font: 11px Arial, sans-serif;
   letter-spacing: 2px;
 }
 
 @media (max-width: 480px) {
-  main { padding: 15px 5px 30px; }
-  .star { font-size: 68px; }
-  .language-switch { margin-bottom: 28px; }
+  main { padding: 10px 3px 25px; }
+  .star { font-size: 65px; }
+  .panel { padding: 22px 15px; }
 }
 </style>
 </head>
@@ -127,89 +205,326 @@ footer {
 <main>
 
   <div class="language-switch">
-    <button id="etButton" onclick="setLanguage('et')">Eesti</button>
-    <button id="ruButton" onclick="setLanguage('ru')">Русский</button>
+    <button id="etButton" type="button" onclick="setLanguage('et')">Eesti</button>
+    <button id="ruButton" type="button" onclick="setLanguage('ru')">Русский</button>
   </div>
 
   <div class="star">✦</div>
-
   <div class="name" id="name"></div>
-
   <h1 id="title"></h1>
-
   <div class="subtitle" id="subtitle"></div>
-
   <div class="description" id="description"></div>
 
-  <div class="notice">
-    <strong id="noticeTitle"></strong>
-    <br>
-    <span id="noticeText"></span>
-  </div>
+  <section class="panel" id="authPanel">
+    <h2 id="formTitle"></h2>
+
+    <form id="authForm">
+
+      <div id="nameField">
+        <label id="fullNameLabel" for="fullName"></label>
+        <input id="fullName" type="text"
+          autocomplete="name" maxlength="80">
+      </div>
+
+      <label id="emailLabel" for="email"></label>
+      <input id="email" type="email"
+        autocomplete="email" required>
+
+      <label id="passwordLabel" for="password"></label>
+      <input id="password" type="password"
+        autocomplete="current-password" minlength="6" required>
+
+      <div id="confirmField">
+        <label id="confirmLabel" for="confirmPassword"></label>
+        <input id="confirmPassword" type="password"
+          autocomplete="new-password" minlength="6">
+      </div>
+
+      <button class="primary" id="submitButton" type="submit"></button>
+
+    </form>
+
+    <button class="secondary" id="switchButton"
+      type="button" onclick="switchMode()"></button>
+
+    <div class="message" id="message" role="status"></div>
+  </section>
+
+  <section class="panel hidden" id="userPanel">
+    <div class="welcome">
+      <strong id="welcomeTitle"></strong>
+      <p id="welcomeText"></p>
+      <p id="userEmail"></p>
+      <p id="progressText"></p>
+    </div>
+    <button class="primary" id="logoutButton"
+      type="button" onclick="logout()"></button>
+    <div class="message" id="userMessage"></div>
+  </section>
 
   <footer id="footer"></footer>
 
 </main>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAxGk03U3bRCVIUKS2NIiH0FDw7lqZkk8",
+  authDomain: "taina-rozhdestva.firebaseapp.com",
+  projectId: "taina-rozhdestva",
+  storageBucket: "taina-rozhdestva.firebasestorage.app",
+  messagingSenderId: "645042469070",
+  appId: "1:645042469070:web:e50b1e7076307838b5f89f"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let currentLanguage = 'ru';
+let mode = 'register';
+
 const translations = {
   ru: {
-    name: "Рождественский городской квест",
-    title: "Тайна<br>Рождества",
-    subtitle: "СЛЕДУЙ ЗА ЗВЕЗДОЙ",
-    description:
-      "Одна история. Один путь к Рождеству." +
-      "<br><br>" +
-      "Отправься в путешествие по улицам Кохтла-Ярве, " +
-      "следуй за Вифлеемской звездой и открой для себя " +
-      "историю самого первого Рождества.",
-    noticeTitle: "Скоро начало путешествия",
-    noticeText:
-      "Следи за звездой. Твоя рождественская история начинается здесь.",
-    footer: "KOHTLA-JÄRVE · CHRISTMAS QUEST · 2026"
+    name: 'Рождественский городской квест',
+    title: 'Тайна<br>Рождества',
+    subtitle: 'СЛЕДУЙ ЗА ЗВЕЗДОЙ',
+    description: 'Одна история. Один путь к Рождеству.<br><br>Отправься в путешествие по улицам Кохтла-Ярве, следуй за Вифлеемской звездой и открой для себя историю самого первого Рождества.',
+    register: 'Создать аккаунт',
+    login: 'Войти в аккаунт',
+    fullName: 'Имя и фамилия',
+    email: 'Электронная почта',
+    password: 'Пароль',
+    confirm: 'Повтори пароль',
+    create: 'Зарегистрироваться',
+    enter: 'Войти',
+    switchLogin: 'Уже есть аккаунт? Войти',
+    switchRegister: 'Нет аккаунта? Зарегистрироваться',
+    welcome: 'Добро пожаловать!',
+    welcomeText: 'Твой аккаунт создан. Скоро здесь начнётся твоё путешествие за Вифлеемской звездой.',
+    progress: 'Пройдено точек: 0 из 15',
+    logout: 'Выйти из аккаунта',
+    footer: 'KOHTLA-JÄRVE · CHRISTMAS QUEST · 2026',
+    passwordMismatch: 'Пароли не совпадают.',
+    nameRequired: 'Введи имя и фамилию.',
+    accountCreated: 'Аккаунт создан, но профиль не сохранился. Обратись к организатору.',
+    errors: {
+      'auth/email-already-in-use': 'Эта почта уже зарегистрирована. Попробуй войти.',
+      'auth/invalid-email': 'Проверь правильность электронной почты.',
+      'auth/weak-password': 'Пароль должен содержать не менее 6 символов.',
+      'auth/user-not-found': 'Аккаунт с такой почтой не найден.',
+      'auth/wrong-password': 'Неверный пароль.',
+      'auth/invalid-credential': 'Неверная почта или пароль.',
+      'auth/too-many-requests': 'Слишком много попыток. Попробуй позже.',
+      'auth/unauthorized-domain': 'Этот домен не разрешён в Firebase.',
+      'permission-denied': 'Нет доступа к базе данных. Проверь правила Firestore.',
+      default: 'Не удалось выполнить действие. Попробуй ещё раз.'
+    }
   },
 
   et: {
-    name: "Jõulude linnaseiklus",
-    title: "Jõulude<br>saladus",
-    subtitle: "JÄRGI TÄHTE",
-    description:
-      "Üks lugu. Üks tee jõuludeni." +
-      "<br><br>" +
-      "Alusta rännakut Kohtla-Järve tänavatel, " +
-      "järgi Petlemma tähte ja avasta esimeste " +
-      "jõulude lugu.",
-    noticeTitle: "Teekond algab peagi",
-    noticeText:
-      "Järgi tähte. Sinu jõululugu algab siit.",
-    footer: "KOHTLA-JÄRVE · JÕULUSEIKLUS · 2026"
+    name: 'Jõulude linnaseiklus',
+    title: 'Jõulude<br>saladus',
+    subtitle: 'JÄRGI TÄHTE',
+    description: 'Üks lugu. Üks tee jõuludeni.<br><br>Alusta rännakut Kohtla-Järve tänavatel, järgi Petlemma tähte ja avasta esimeste jõulude lugu.',
+    register: 'Loo konto',
+    login: 'Logi sisse',
+    fullName: 'Ees- ja perekonnanimi',
+    email: 'E-posti aadress',
+    password: 'Parool',
+    confirm: 'Korda parooli',
+    create: 'Registreeru',
+    enter: 'Logi sisse',
+    switchLogin: 'Konto on juba olemas? Logi sisse',
+    switchRegister: 'Kontot pole? Registreeru',
+    welcome: 'Tere tulemast!',
+    welcomeText: 'Sinu konto on loodud. Peagi algab siin sinu teekond Petlemma tähe jälgedes.',
+    progress: 'Läbitud punkte: 0 / 15',
+    logout: 'Logi välja',
+    footer: 'KOHTLA-JÄRVE · JÕULUSEIKLUS · 2026',
+    passwordMismatch: 'Paroolid ei ühti.',
+    nameRequired: 'Sisesta ees- ja perekonnanimi.',
+    accountCreated: 'Konto loodi, kuid profiili salvestamine ebaõnnestus. Võta korraldajaga ühendust.',
+    errors: {
+      'auth/email-already-in-use': 'See e-posti aadress on juba registreeritud. Proovi sisse logida.',
+      'auth/invalid-email': 'Kontrolli e-posti aadressi.',
+      'auth/weak-password': 'Parool peab sisaldama vähemalt 6 märki.',
+      'auth/user-not-found': 'Sellise e-posti aadressiga kontot ei leitud.',
+      'auth/wrong-password': 'Vale parool.',
+      'auth/invalid-credential': 'Vale e-posti aadress või parool.',
+      'auth/too-many-requests': 'Liiga palju katseid. Proovi hiljem uuesti.',
+      'auth/unauthorized-domain': 'See domeen pole Firebase'is lubatud.',
+      'permission-denied': 'Andmebaasile puudub juurdepääs. Kontrolli Firestore reegleid.',
+      default: 'Toiming ebaõnnestus. Proovi uuesti.'
+    }
   }
 };
 
 function setLanguage(language) {
+  currentLanguage = language;
   const t = translations[language];
 
   document.documentElement.lang = language;
-  document.getElementById("name").textContent = t.name;
-  document.getElementById("title").innerHTML = t.title;
-  document.getElementById("subtitle").textContent = t.subtitle;
-  document.getElementById("description").innerHTML = t.description;
-  document.getElementById("noticeTitle").textContent = t.noticeTitle;
-  document.getElementById("noticeText").textContent = t.noticeText;
-  document.getElementById("footer").textContent = t.footer;
+  document.getElementById('name').textContent = t.name;
+  document.getElementById('title').innerHTML = t.title;
+  document.getElementById('subtitle').textContent = t.subtitle;
+  document.getElementById('description').innerHTML = t.description;
+  document.getElementById('footer').textContent = t.footer;
 
-  document.getElementById("etButton").classList.toggle(
-    "active", language === "et"
-  );
-  document.getElementById("ruButton").classList.toggle(
-    "active", language === "ru"
-  );
+  document.getElementById('etButton').classList.toggle('active', language === 'et');
+  document.getElementById('ruButton').classList.toggle('active', language === 'ru');
 
-  localStorage.setItem("questLanguage", language);
+  document.getElementById('fullNameLabel').textContent = t.fullName;
+  document.getElementById('emailLabel').textContent = t.email;
+  document.getElementById('passwordLabel').textContent = t.password;
+  document.getElementById('confirmLabel').textContent = t.confirm;
+  document.getElementById('welcomeTitle').textContent = t.welcome;
+  document.getElementById('welcomeText').textContent = t.welcomeText;
+  document.getElementById('progressText').textContent = t.progress;
+  document.getElementById('logoutButton').textContent = t.logout;
+
+  updateModeText();
+
+  localStorage.setItem('questLanguage', language);
 }
 
-const savedLanguage = localStorage.getItem("questLanguage");
-setLanguage(savedLanguage === "et" ? "et" : "ru");
+function updateModeText() {
+  const t = translations[currentLanguage];
+
+  document.getElementById('formTitle').textContent =
+    mode === 'register' ? t.register : t.login;
+
+  document.getElementById('submitButton').textContent =
+    mode === 'register' ? t.create : t.enter;
+
+  document.getElementById('switchButton').textContent =
+    mode === 'register' ? t.switchLogin : t.switchRegister;
+
+  document.getElementById('nameField').classList.toggle('hidden', mode !== 'register');
+  document.getElementById('confirmField').classList.toggle('hidden', mode !== 'register');
+
+  document.getElementById('fullName').required = mode === 'register';
+  document.getElementById('confirmPassword').required = mode === 'register';
+
+  document.getElementById('password').autocomplete =
+    mode === 'register' ? 'new-password' : 'current-password';
+
+  document.getElementById('message').textContent = '';
+}
+
+function switchMode() {
+  mode = mode === 'register' ? 'login' : 'register';
+  document.getElementById('authForm').reset();
+  updateModeText();
+}
+
+function showError(error) {
+  const t = translations[currentLanguage];
+  const code = error.code || '';
+  const message =
+    t.errors[code] ||
+    (code === 'permission-denied' ? t.errors['permission-denied'] : null) ||
+    t.errors.default;
+
+  document.getElementById('message').textContent = message;
+}
+
+document.getElementById('authForm').addEventListener('submit', async function(event) {
+  event.preventDefault();
+
+  const t = translations[currentLanguage];
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const button = document.getElementById('submitButton');
+
+  button.disabled = true;
+  document.getElementById('message').textContent = '';
+
+  try {
+    if (mode === 'register') {
+      const fullName = document.getElementById('fullName').value.trim();
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (fullName.length < 2) {
+        throw new Error('NAME_REQUIRED');
+      }
+
+      if (password !== confirmPassword) {
+        throw new Error('PASSWORD_MISMATCH');
+      }
+
+      const credential = await auth.createUserWithEmailAndPassword(email, password);
+
+      await db.collection('users').doc(credential.user.uid).set({
+        fullName: fullName,
+        email: credential.user.email,
+        language: currentLanguage,
+        completedPoints: 0,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+    } else {
+      await auth.signInWithEmailAndPassword(email, password);
+    }
+
+  } catch (error) {
+    if (error.message === 'NAME_REQUIRED') {
+      document.getElementById('message').textContent = t.nameRequired;
+    } else if (error.message === 'PASSWORD_MISMATCH') {
+      document.getElementById('message').textContent = t.passwordMismatch;
+    } else if (error.code === 'permission-denied') {
+      showError({code: 'permission-denied'});
+    } else {
+      showError(error);
+    }
+  } finally {
+    button.disabled = false;
+  }
+});
+
+auth.onAuthStateChanged(async function(user) {
+  const authPanel = document.getElementById('authPanel');
+  const userPanel = document.getElementById('userPanel');
+
+  if (!user) {
+    authPanel.classList.remove('hidden');
+    userPanel.classList.add('hidden');
+    return;
+  }
+
+  try {
+    const doc = await db.collection('users').doc(user.uid).get();
+
+    if (!doc.exists) {
+      document.getElementById('userMessage').textContent =
+        translations[currentLanguage].accountCreated;
+    } else {
+      document.getElementById('welcomeTitle').textContent =
+        translations[currentLanguage].welcome + ' ' + doc.data().fullName;
+    }
+
+    document.getElementById('userEmail').textContent = user.email || '';
+    authPanel.classList.add('hidden');
+    userPanel.classList.remove('hidden');
+
+  } catch (error) {
+    document.getElementById('userMessage').textContent =
+      translations[currentLanguage].errors.default;
+  }
+});
+
+async function logout() {
+  await auth.signOut();
+}
+
+const savedLanguage = localStorage.getItem('questLanguage');
+setLanguage(savedLanguage === 'et' ? 'et' : 'ru');
 </script>
 
 </body>
