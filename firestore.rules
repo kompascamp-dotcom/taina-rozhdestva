@@ -1,0 +1,42 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /users/{userId} {
+
+      // Участник может читать только свой профиль
+      allow read: if request.auth != null
+                  && request.auth.uid == userId;
+
+      // При регистрации разрешено создать профиль
+      // только с нулевым прогрессом
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.resource.data.keys().hasAll([
+                      'fullName',
+                      'email',
+                      'language',
+                      'completedPoints',
+                      'createdAt'
+                    ])
+                    && request.resource.data.keys().hasOnly([
+                      'fullName',
+                      'email',
+                      'language',
+                      'completedPoints',
+                      'createdAt'
+                    ])
+                    && request.resource.data.fullName is string
+                    && request.resource.data.fullName.size() >= 2
+                    && request.resource.data.fullName.size() <= 80
+                    && request.resource.data.email == request.auth.token.email
+                    && request.resource.data.language in ['ru', 'et']
+                    && request.resource.data.completedPoints == 0
+                    && request.resource.data.createdAt == request.time;
+
+      // Клиент не может самостоятельно менять прогресс
+      allow update, delete: if false;
+    }
+  }
+}
