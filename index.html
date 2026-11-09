@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -132,7 +131,9 @@ input {
   outline: none;
 }
 
-input:focus { border-color: #E8BD65; }
+input:focus {
+  border-color: #E8BD65;
+}
 
 .primary {
   width: 100%;
@@ -170,7 +171,9 @@ input:focus { border-color: #E8BD65; }
   overflow-wrap: anywhere;
 }
 
-.hidden { display: none !important; }
+.hidden {
+  display: none !important;
+}
 
 .welcome {
   text-align: center;
@@ -203,8 +206,10 @@ footer {
 <main>
 
   <div class="language-switch">
-    <button id="etButton" type="button" onclick="setLanguage('et')">Eesti</button>
-    <button id="ruButton" type="button" onclick="setLanguage('ru')">Русский</button>
+    <button id="etButton" type="button"
+      onclick="setLanguage('et')">Eesti</button>
+    <button id="ruButton" type="button"
+      onclick="setLanguage('ru')">Русский</button>
   </div>
 
   <div class="star">✦</div>
@@ -229,7 +234,8 @@ footer {
 
       <label id="passwordLabel" for="password"></label>
       <input id="password" type="password"
-        autocomplete="current-password" minlength="6" required>
+        autocomplete="current-password"
+        minlength="6" required>
 
       <div id="confirmField">
         <label id="confirmLabel" for="confirmPassword"></label>
@@ -237,7 +243,8 @@ footer {
           autocomplete="new-password" minlength="6">
       </div>
 
-      <button class="primary" id="submitButton" type="submit"></button>
+      <button class="primary" id="submitButton"
+        type="submit"></button>
     </form>
 
     <button class="secondary" id="switchButton"
@@ -253,8 +260,10 @@ footer {
       <p id="userEmail"></p>
       <p id="progressText"></p>
     </div>
+
     <button class="primary" id="logoutButton"
       type="button" onclick="logout()"></button>
+
     <div class="message" id="userMessage"></div>
   </section>
 
@@ -262,13 +271,19 @@ footer {
 
 </main>
 
+<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
+
+// ========================================
+// 1. FIREBASE CONFIGURATION
+// ========================================
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAxGk03U3bRCVIUKS2NIiH0FDw7lqZkk8",
+  apiKey: "AIzaSyAxGk03U3bRCVIUKS2NIiH0FDw7lqZkkW8",
   authDomain: "taina-rozhdestva.firebaseapp.com",
   projectId: "taina-rozhdestva",
   storageBucket: "taina-rozhdestva.firebasestorage.app",
@@ -281,117 +296,244 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+
+// ========================================
+// 2. APPLICATION SETTINGS
+// ========================================
+
 let currentLanguage = 'ru';
 let mode = 'register';
 
+
+// ========================================
+// 3. TRANSLATIONS
+// ========================================
+
 const translations = {
+
   ru: {
     name: 'Рождественский городской квест',
     title: 'Тайна<br>Рождества',
     subtitle: 'СЛЕДУЙ ЗА ЗВЕЗДОЙ',
-    description: 'Одна история. Один путь к Рождеству.<br><br>Отправься в путешествие по улицам Кохтла-Ярве, следуй за Вифлеемской звездой и открой для себя историю самого первого Рождества.',
+
+    description:
+      'Одна история. Один путь к Рождеству.<br><br>' +
+      'Отправься в путешествие по улицам Кохтла-Ярве, ' +
+      'следуй за Вифлеемской звездой и открой для себя ' +
+      'историю самого первого Рождества.',
+
     register: 'Создать аккаунт',
     login: 'Войти в аккаунт',
+
     fullName: 'Имя и фамилия',
     email: 'Электронная почта',
     password: 'Пароль',
     confirm: 'Повтори пароль',
+
     create: 'Зарегистрироваться',
     enter: 'Войти',
+
     switchLogin: 'Уже есть аккаунт? Войти',
     switchRegister: 'Нет аккаунта? Зарегистрироваться',
+
     welcome: 'Добро пожаловать!',
-    welcomeText: 'Твой аккаунт создан. Скоро здесь начнётся твоё путешествие за Вифлеемской звездой.',
+
+    welcomeText:
+      'Твой аккаунт создан. Скоро здесь начнётся ' +
+      'твоё путешествие за Вифлеемской звездой.',
+
     progress: 'Пройдено точек: 0 из 15',
     logout: 'Выйти из аккаунта',
+
     footer: 'KOHTLA-JÄRVE · CHRISTMAS QUEST · 2026',
+
     passwordMismatch: 'Пароли не совпадают.',
     nameRequired: 'Введи имя и фамилию.',
-    accountCreated: 'Аккаунт создан, но профиль не сохранился. Обратись к организатору.',
+
+    accountCreated:
+      'Аккаунт создан, но профиль не сохранился. ' +
+      'Обратись к организатору.',
+
     errors: {
-      'auth/email-already-in-use': 'Эта почта уже зарегистрирована. Попробуй войти.',
-      'auth/invalid-email': 'Проверь правильность электронной почты.',
-      'auth/weak-password': 'Пароль должен содержать не менее 6 символов.',
-      'auth/user-not-found': 'Аккаунт с такой почтой не найден.',
-      'auth/wrong-password': 'Неверный пароль.',
-      'auth/invalid-credential': 'Неверная почта или пароль.',
-      'auth/too-many-requests': 'Слишком много попыток. Попробуй позже.',
-      'auth/unauthorized-domain': 'Этот домен не разрешён в Firebase.',
-      'auth/operation-not-allowed': 'Регистрация по электронной почте отключена в Firebase.',
-      'auth/network-request-failed': 'Не удалось подключиться к Firebase. Проверь интернет.',
-      'permission-denied': 'Нет доступа к базе данных. Проверь правила Firestore.',
+      'auth/email-already-in-use':
+        'Эта почта уже зарегистрирована. Попробуй войти.',
+
+      'auth/invalid-email':
+        'Проверь правильность электронной почты.',
+
+      'auth/weak-password':
+        'Пароль должен содержать не менее 6 символов.',
+
+      'auth/user-not-found':
+        'Аккаунт с такой почтой не найден.',
+
+      'auth/wrong-password':
+        'Неверный пароль.',
+
+      'auth/invalid-credential':
+        'Неверная почта или пароль.',
+
+      'auth/too-many-requests':
+        'Слишком много попыток. Попробуй позже.',
+
+      'auth/unauthorized-domain':
+        'Этот домен не разрешён в Firebase.',
+
+      'auth/operation-not-allowed':
+        'Регистрация по электронной почте отключена в Firebase.',
+
+      'auth/network-request-failed':
+        'Не удалось подключиться к Firebase. Проверь интернет.',
+
+      'auth/api-key-not-valid':
+        'Firebase не принимает API-ключ. Проверь конфигурацию проекта.',
+
+      'auth/invalid-api-key':
+        'Неверный API-ключ Firebase.',
+
+      'permission-denied':
+        'Нет доступа к базе данных. Проверь правила Firestore.',
+
       default: 'Не удалось выполнить действие.'
     }
   },
+
 
   et: {
     name: 'Jõulude linnaseiklus',
     title: 'Jõulude<br>saladus',
     subtitle: 'JÄRGI TÄHTE',
-    description: 'Üks lugu. Üks tee jõuludeni.<br><br>Alusta rännakut Kohtla-Järve tänavatel, järgi Petlemma tähte ja avasta esimeste jõulude lugu.',
+
+    description:
+      'Üks lugu. Üks tee jõuludeni.<br><br>' +
+      'Alusta rännakut Kohtla-Järve tänavatel, ' +
+      'järgi Petlemma tähte ja avasta esimeste jõulude lugu.',
+
     register: 'Loo konto',
     login: 'Logi sisse',
+
     fullName: 'Ees- ja perekonnanimi',
     email: 'E-posti aadress',
     password: 'Parool',
     confirm: 'Korda parooli',
+
     create: 'Registreeru',
     enter: 'Logi sisse',
+
     switchLogin: 'Konto on juba olemas? Logi sisse',
     switchRegister: 'Kontot pole? Registreeru',
+
     welcome: 'Tere tulemast!',
-    welcomeText: 'Sinu konto on loodud. Peagi algab siin sinu teekond Petlemma tähe jälgedes.',
+
+    welcomeText:
+      'Sinu konto on loodud. Peagi algab siin ' +
+      'sinu teekond Petlemma tähe jälgedes.',
+
     progress: 'Läbitud punkte: 0 / 15',
     logout: 'Logi välja',
+
     footer: 'KOHTLA-JÄRVE · JÕULUSEIKLUS · 2026',
+
     passwordMismatch: 'Paroolid ei ühti.',
     nameRequired: 'Sisesta ees- ja perekonnanimi.',
-    accountCreated: 'Konto loodi, kuid profiili salvestamine ebaõnnestus. Võta korraldajaga ühendust.',
+
+    accountCreated:
+      'Konto loodi, kuid profiili salvestamine ebaõnnestus. ' +
+      'Võta korraldajaga ühendust.',
+
     errors: {
-      'auth/email-already-in-use': 'See e-posti aadress on juba registreeritud. Proovi sisse logida.',
-      'auth/invalid-email': 'Kontrolli e-posti aadressi.',
-      'auth/weak-password': 'Parool peab sisaldama vähemalt 6 märki.',
-      'auth/user-not-found': 'Sellise e-posti aadressiga kontot ei leitud.',
-      'auth/wrong-password': 'Vale parool.',
-      'auth/invalid-credential': 'Vale e-posti aadress või parool.',
-      'auth/too-many-requests': 'Liiga palju katseid. Proovi hiljem uuesti.',
-      'auth/unauthorized-domain': "See domeen pole Firebase'is lubatud.",
-      'auth/operation-not-allowed': 'E-posti teel registreerimine pole Firebase’is lubatud.',
-      'auth/network-request-failed': 'Firebase’iga ei õnnestunud ühendust luua. Kontrolli internetti.',
-      'permission-denied': 'Andmebaasile puudub juurdepääs. Kontrolli Firestore reegleid.',
+      'auth/email-already-in-use':
+        'See e-posti aadress on juba registreeritud. Proovi sisse logida.',
+
+      'auth/invalid-email':
+        'Kontrolli e-posti aadressi.',
+
+      'auth/weak-password':
+        'Parool peab sisaldama vähemalt 6 märki.',
+
+      'auth/user-not-found':
+        'Sellise e-posti aadressiga kontot ei leitud.',
+
+      'auth/wrong-password':
+        'Vale parool.',
+
+      'auth/invalid-credential':
+        'Vale e-posti aadress või parool.',
+
+      'auth/too-many-requests':
+        'Liiga palju katseid. Proovi hiljem uuesti.',
+
+      'auth/unauthorized-domain':
+        "See domeen pole Firebase'is lubatud.",
+
+      'auth/operation-not-allowed':
+        'E-posti teel registreerimine pole Firebase’is lubatud.',
+
+      'auth/network-request-failed':
+        'Firebase’iga ei õnnestunud ühendust luua. Kontrolli internetti.',
+
+      'auth/api-key-not-valid':
+        'Firebase API-võti ei sobi. Kontrolli projekti seadeid.',
+
+      'auth/invalid-api-key':
+        'Firebase API-võti on vale.',
+
+      'permission-denied':
+        'Andmebaasile puudub juurdepääs. Kontrolli Firestore reegleid.',
+
       default: 'Toiming ebaõnnestus.'
     }
   }
+
 };
 
+
+// ========================================
+// 4. LANGUAGE SWITCHING
+// ========================================
+
 function setLanguage(language) {
+
   currentLanguage = language;
+
   const t = translations[language];
 
   document.documentElement.lang = language;
+
   document.getElementById('name').textContent = t.name;
   document.getElementById('title').innerHTML = t.title;
   document.getElementById('subtitle').textContent = t.subtitle;
   document.getElementById('description').innerHTML = t.description;
   document.getElementById('footer').textContent = t.footer;
 
-  document.getElementById('etButton').classList.toggle('active', language === 'et');
-  document.getElementById('ruButton').classList.toggle('active', language === 'ru');
+  document.getElementById('etButton')
+    .classList.toggle('active', language === 'et');
+
+  document.getElementById('ruButton')
+    .classList.toggle('active', language === 'ru');
 
   document.getElementById('fullNameLabel').textContent = t.fullName;
   document.getElementById('emailLabel').textContent = t.email;
   document.getElementById('passwordLabel').textContent = t.password;
   document.getElementById('confirmLabel').textContent = t.confirm;
+
   document.getElementById('welcomeTitle').textContent = t.welcome;
   document.getElementById('welcomeText').textContent = t.welcomeText;
   document.getElementById('progressText').textContent = t.progress;
   document.getElementById('logoutButton').textContent = t.logout;
 
   updateModeText();
+
   localStorage.setItem('questLanguage', language);
 }
 
+
+// ========================================
+// 5. REGISTRATION / LOGIN MODE
+// ========================================
+
 function updateModeText() {
+
   const t = translations[currentLanguage];
 
   document.getElementById('formTitle').textContent =
@@ -403,11 +545,17 @@ function updateModeText() {
   document.getElementById('switchButton').textContent =
     mode === 'register' ? t.switchLogin : t.switchRegister;
 
-  document.getElementById('nameField').classList.toggle('hidden', mode !== 'register');
-  document.getElementById('confirmField').classList.toggle('hidden', mode !== 'register');
+  document.getElementById('nameField')
+    .classList.toggle('hidden', mode !== 'register');
 
-  document.getElementById('fullName').required = mode === 'register';
-  document.getElementById('confirmPassword').required = mode === 'register';
+  document.getElementById('confirmField')
+    .classList.toggle('hidden', mode !== 'register');
+
+  document.getElementById('fullName').required =
+    mode === 'register';
+
+  document.getElementById('confirmPassword').required =
+    mode === 'register';
 
   document.getElementById('password').autocomplete =
     mode === 'register' ? 'new-password' : 'current-password';
@@ -415,118 +563,253 @@ function updateModeText() {
   document.getElementById('message').textContent = '';
 }
 
+
 function switchMode() {
+
   mode = mode === 'register' ? 'login' : 'register';
+
   document.getElementById('authForm').reset();
+
   updateModeText();
 }
 
+
+// ========================================
+// 6. ERROR HANDLING
+// ========================================
+
 function showError(error) {
+
   console.error('Firebase error:', error);
 
   const code = error.code || 'unknown';
-  const details = error.message || 'Нет дополнительной информации';
-  const translated = translations[currentLanguage].errors[code];
-
-  document.getElementById('message').textContent =
-    'Ошибка: ' + code + ' — ' + (translated || details);
-}
-
-document.getElementById('authForm').addEventListener('submit', async function(event) {
-  event.preventDefault();
 
   const t = translations[currentLanguage];
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const button = document.getElementById('submitButton');
 
-  button.disabled = true;
-  document.getElementById('message').textContent = '';
+  const translated =
+    t.errors[code] || t.errors.default;
 
-  try {
-    if (mode === 'register') {
-      const fullName = document.getElementById('fullName').value.trim();
-      const confirmPassword = document.getElementById('confirmPassword').value;
-
-      if (fullName.length < 2) {
-        throw new Error('NAME_REQUIRED');
-      }
-
-      if (password !== confirmPassword) {
-        throw new Error('PASSWORD_MISMATCH');
-      }
-
-      const credential = await auth.createUserWithEmailAndPassword(email, password);
-
-      await db.collection('users').doc(credential.user.uid).set({
-        fullName: fullName,
-        email: credential.user.email,
-        language: currentLanguage,
-        completedPoints: 0,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-
-    } else {
-      await auth.signInWithEmailAndPassword(email, password);
-    }
-
-  } catch (error) {
-    if (error.message === 'NAME_REQUIRED') {
-      document.getElementById('message').textContent = t.nameRequired;
-    } else if (error.message === 'PASSWORD_MISMATCH') {
-      document.getElementById('message').textContent = t.passwordMismatch;
-    } else {
-      showError(error);
-    }
-  } finally {
-    button.disabled = false;
-  }
-});
-
-auth.onAuthStateChanged(async function(user) {
-  const authPanel = document.getElementById('authPanel');
-  const userPanel = document.getElementById('userPanel');
-
-  if (!user) {
-    authPanel.classList.remove('hidden');
-    userPanel.classList.add('hidden');
-    return;
-  }
-
-  try {
-    const doc = await db.collection('users').doc(user.uid).get();
-
-    if (!doc.exists) {
-      document.getElementById('userMessage').textContent =
-        translations[currentLanguage].accountCreated;
-    } else {
-      document.getElementById('welcomeTitle').textContent =
-        translations[currentLanguage].welcome + ' ' + doc.data().fullName;
-    }
-
-    document.getElementById('userEmail').textContent = user.email || '';
-    authPanel.classList.add('hidden');
-    userPanel.classList.remove('hidden');
-
-  } catch (error) {
-    console.error('Profile loading error:', error);
-    document.getElementById('userMessage').textContent =
-      'Ошибка загрузки профиля: ' + (error.code || error.message);
-    authPanel.classList.add('hidden');
-    userPanel.classList.remove('hidden');
-  }
-});
-
-async function logout() {
-  try {
-    await auth.signOut();
-  } catch (error) {
-    showError(error);
-  }
+  document.getElementById('message').textContent =
+    'Ошибка: ' + code + ' — ' + translated;
 }
 
-const savedLanguage = localStorage.getItem('questLanguage');
-setLanguage(savedLanguage === 'et' ? 'et' : 'ru');
+
+// ========================================
+// 7. REGISTRATION AND LOGIN
+// ========================================
+
+document.getElementById('authForm')
+  .addEventListener('submit', async function(event) {
+
+    event.preventDefault();
+
+    const t = translations[currentLanguage];
+
+    const email =
+      document.getElementById('email').value.trim();
+
+    const password =
+      document.getElementById('password').value;
+
+    const button =
+      document.getElementById('submitButton');
+
+    button.disabled = true;
+
+    document.getElementById('message').textContent = '';
+
+    try {
+
+      if (mode === 'register') {
+
+        const fullName =
+          document.getElementById('fullName').value.trim();
+
+        const confirmPassword =
+          document.getElementById('confirmPassword').value;
+
+        if (fullName.length < 2) {
+          document.getElementById('message').textContent =
+            t.nameRequired;
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          document.getElementById('message').textContent =
+            t.passwordMismatch;
+          return;
+        }
+
+        // Создаём аккаунт Firebase Authentication
+        const credential =
+          await auth.createUserWithEmailAndPassword(
+            email,
+            password
+          );
+
+        // Сохраняем профиль в Firestore
+        await db.collection('users')
+          .doc(credential.user.uid)
+          .set({
+
+            fullName: fullName,
+
+            email: credential.user.email,
+
+            language: currentLanguage,
+
+            completedPoints: 0,
+
+            createdAt:
+              firebase.firestore.FieldValue.serverTimestamp()
+
+          });
+
+        console.log('Registration successful');
+
+      } else {
+
+        // Вход существующего пользователя
+        await auth.signInWithEmailAndPassword(
+          email,
+          password
+        );
+
+        console.log('Login successful');
+
+      }
+
+    } catch (error) {
+
+      showError(error);
+
+      // Если аккаунт уже создан, но запись профиля не удалась,
+      // пользователь остаётся авторизованным.
+      // Ошибка будет показана отдельно.
+
+    } finally {
+
+      button.disabled = false;
+
+    }
+
+  });
+
+
+// ========================================
+// 8. CHECK AUTHENTICATION STATE
+// ========================================
+
+auth.onAuthStateChanged(async function(user) {
+
+  const authPanel =
+    document.getElementById('authPanel');
+
+  const userPanel =
+    document.getElementById('userPanel');
+
+  const userMessage =
+    document.getElementById('userMessage');
+
+  userMessage.textContent = '';
+
+  if (!user) {
+
+    authPanel.classList.remove('hidden');
+
+    userPanel.classList.add('hidden');
+
+    return;
+
+  }
+
+  try {
+
+    const doc =
+      await db.collection('users')
+        .doc(user.uid)
+        .get();
+
+    if (!doc.exists) {
+
+      userMessage.textContent =
+        translations[currentLanguage].accountCreated;
+
+      document.getElementById('welcomeTitle').textContent =
+        translations[currentLanguage].welcome;
+
+    } else {
+
+      const userData = doc.data();
+
+      document.getElementById('welcomeTitle').textContent =
+        translations[currentLanguage].welcome +
+        ' ' + userData.fullName;
+
+      const completed =
+        Number(userData.completedPoints) || 0;
+
+      document.getElementById('progressText').textContent =
+        currentLanguage === 'ru'
+          ? 'Пройдено точек: ' + completed + ' из 15'
+          : 'Läbitud punkte: ' + completed + ' / 15';
+
+    }
+
+    document.getElementById('userEmail').textContent =
+      user.email || '';
+
+    authPanel.classList.add('hidden');
+
+    userPanel.classList.remove('hidden');
+
+  } catch (error) {
+
+    console.error('Profile loading error:', error);
+
+    userMessage.textContent =
+      'Ошибка загрузки профиля: ' +
+      (error.code || error.message);
+
+    authPanel.classList.add('hidden');
+
+    userPanel.classList.remove('hidden');
+
+  }
+
+});
+
+
+// ========================================
+// 9. LOGOUT
+// ========================================
+
+async function logout() {
+
+  try {
+
+    await auth.signOut();
+
+  } catch (error) {
+
+    showError(error);
+
+  }
+
+}
+
+
+// ========================================
+// 10. INITIAL LANGUAGE
+// ========================================
+
+const savedLanguage =
+  localStorage.getItem('questLanguage');
+
+setLanguage(
+  savedLanguage === 'et' ? 'et' : 'ru'
+);
+
 </script>
 
 </body>
