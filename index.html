@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -17,24 +18,22 @@ body {
   background:
     radial-gradient(ellipse at 50% 18%, #263b60 0%, transparent 55%),
     linear-gradient(180deg, #080F25, #101a32 70%, #080F25);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
+  padding: 20px;
   text-align: center;
 }
 
 main {
   width: 100%;
-  max-width: 520px;
-  padding: 20px 10px 40px;
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 10px 5px 40px;
 }
 
 .language-switch {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 button {
@@ -187,17 +186,189 @@ input:focus {
   font-size: 20px;
 }
 
+/* =================================
+   PROGRESS
+================================= */
+
+.progress-section {
+  margin-top: 28px;
+  padding: 20px;
+  background: rgba(8, 15, 37, 0.65);
+  border: 1px solid #394b69;
+  border-radius: 14px;
+  font-family: Arial, sans-serif;
+}
+
+.progress-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 13px;
+  color: #d4d9e5;
+  font-size: 14px;
+}
+
+.progress-number {
+  color: #E8BD65;
+  font-size: 19px;
+  font-weight: bold;
+}
+
+.progress-track {
+  height: 9px;
+  border-radius: 20px;
+  background: #263550;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #bd9146, #F5D58E);
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+/* =================================
+   ADVENTURE MAP
+================================= */
+
+.adventure {
+  margin-top: 30px;
+  padding: 24px 15px;
+  border: 1px solid #8e7548;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(232,189,101,0.12), transparent 65%),
+    rgba(8,15,37,0.65);
+}
+
+.adventure-title {
+  color: #E8BD65;
+  text-align: center;
+  font-size: 25px;
+  font-weight: normal;
+  margin: 0 0 8px;
+}
+
+.adventure-subtitle {
+  font: 13px/1.7 Arial, sans-serif;
+  color: #aeb9ce;
+  text-align: center;
+  margin: 0 auto 25px;
+  max-width: 400px;
+}
+
+.stars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.point {
+  min-width: 0;
+  min-height: 112px;
+  border-radius: 12px;
+  border: 1px solid #394b69;
+  background: rgba(26, 41, 68, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 5px;
+  font-family: Arial, sans-serif;
+}
+
+.point.available {
+  background: linear-gradient(145deg, #f1d18b, #c99a4d);
+  border: 1px solid #ffe3a7;
+  box-shadow: 0 0 22px rgba(232,189,101,0.24);
+  color: #101a32;
+}
+
+.point.completed {
+  background: rgba(38, 83, 77, 0.55);
+  border-color: #4c9b80;
+  color: #9ee4c9;
+}
+
+.point.locked {
+  color: #75829a;
+}
+
+.point-symbol {
+  font-size: 31px;
+  line-height: 1.2;
+}
+
+.point-number {
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.point-status {
+  font-size: 10px;
+  text-align: center;
+}
+
+.point-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 22px;
+  font: 11px Arial, sans-serif;
+  color: #aeb9ce;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.map-note {
+  margin-top: 25px;
+  padding: 16px;
+  border: 1px solid #394b69;
+  background: rgba(38,59,96,0.25);
+  border-radius: 10px;
+  text-align: center;
+  color: #c4ccda;
+  font: 13px/1.7 Arial, sans-serif;
+}
+
+.map-note strong {
+  display: block;
+  color: #E8BD65;
+  margin-bottom: 5px;
+}
+
 footer {
   margin-top: 38px;
   color: #8994aa;
   font: 11px Arial, sans-serif;
   letter-spacing: 2px;
+  line-height: 1.8;
 }
 
 @media (max-width: 480px) {
-  main { padding: 10px 3px 25px; }
+  main { padding: 5px 2px 25px; }
   .star { font-size: 65px; }
   .panel { padding: 22px 15px; }
+  .adventure { padding: 20px 10px; }
+  .stars-grid { gap: 8px; }
+  .point { min-height: 100px; }
+  .point-symbol { font-size: 27px; }
 }
 </style>
 </head>
@@ -218,10 +389,13 @@ footer {
   <div class="subtitle" id="subtitle"></div>
   <div class="description" id="description"></div>
 
+  <!-- REGISTRATION / LOGIN -->
+
   <section class="panel" id="authPanel">
     <h2 id="formTitle"></h2>
 
     <form id="authForm">
+
       <div id="nameField">
         <label id="fullNameLabel" for="fullName"></label>
         <input id="fullName" type="text"
@@ -253,28 +427,88 @@ footer {
     <div class="message" id="message" role="status"></div>
   </section>
 
+
+  <!-- PARTICIPANT HOME -->
+
   <section class="panel hidden" id="userPanel">
+
     <div class="welcome">
       <strong id="welcomeTitle"></strong>
       <p id="welcomeText"></p>
       <p id="userEmail"></p>
-      <p id="progressText"></p>
     </div>
+
+    <!-- PROGRESS -->
+
+    <div class="progress-section">
+
+      <div class="progress-heading">
+        <span id="progressLabel"></span>
+        <span class="progress-number" id="progressNumber">
+          0 / 15
+        </span>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+    </div>
+
+    <!-- ADVENTURE MAP -->
+
+    <section class="adventure">
+
+      <h2 class="adventure-title" id="adventureTitle"></h2>
+
+      <p class="adventure-subtitle" id="adventureSubtitle"></p>
+
+      <div class="stars-grid" id="starsGrid"></div>
+
+      <div class="point-legend">
+
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#E8BD65"></span>
+          <span id="legendAvailable"></span>
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#4c9b80"></span>
+          <span id="legendCompleted"></span>
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#75829a"></span>
+          <span id="legendLocked"></span>
+        </div>
+
+      </div>
+
+      <div class="map-note">
+        <strong id="mapNoteTitle"></strong>
+        <span id="mapNoteText"></span>
+      </div>
+
+    </section>
 
     <button class="primary" id="logoutButton"
       type="button" onclick="logout()"></button>
 
     <div class="message" id="userMessage"></div>
+
   </section>
 
   <footer id="footer"></footer>
 
 </main>
 
-<!-- Firebase SDK -->
+
+<!-- FIREBASE SDK -->
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 
 <script>
 
@@ -304,6 +538,8 @@ const db = firebase.firestore();
 let currentLanguage = 'ru';
 let mode = 'register';
 
+let currentUserData = null;
+
 
 // ========================================
 // 3. TRANSLATIONS
@@ -312,8 +548,11 @@ let mode = 'register';
 const translations = {
 
   ru: {
+
     name: 'Рождественский городской квест',
+
     title: 'Тайна<br>Рождества',
+
     subtitle: 'СЛЕДУЙ ЗА ЗВЕЗДОЙ',
 
     description:
@@ -339,10 +578,23 @@ const translations = {
     welcome: 'Добро пожаловать!',
 
     welcomeText:
-      'Твой аккаунт создан. Скоро здесь начнётся ' +
-      'твоё путешествие за Вифлеемской звездой.',
+      'Твоё путешествие за Вифлеемской звездой начинается здесь.',
 
-    progress: 'Пройдено точек: 0 из 15',
+    progress: 'Твой прогресс',
+    adventureTitle: 'Путь за звездой',
+
+    adventureSubtitle:
+      'Следуй за Вифлеемской звездой и постепенно открывай историю Рождества.',
+
+    available: 'Доступна',
+    completed: 'Пройдена',
+    locked: 'Закрыта',
+
+    mapNoteTitle: 'Твоё путешествие начинается!',
+
+    mapNoteText:
+      'Первая точка уже отмечена звездой. Найди QR-код на месте, чтобы открыть первую историю.',
+
     logout: 'Выйти из аккаунта',
 
     footer: 'KOHTLA-JÄRVE · CHRISTMAS QUEST · 2026',
@@ -351,10 +603,10 @@ const translations = {
     nameRequired: 'Введи имя и фамилию.',
 
     accountCreated:
-      'Аккаунт создан, но профиль не сохранился. ' +
-      'Обратись к организатору.',
+      'Аккаунт создан, но профиль не сохранился. Обратись к организатору.',
 
     errors: {
+
       'auth/email-already-in-use':
         'Эта почта уже зарегистрирована. Попробуй войти.',
 
@@ -400,8 +652,11 @@ const translations = {
 
 
   et: {
+
     name: 'Jõulude linnaseiklus',
+
     title: 'Jõulude<br>saladus',
+
     subtitle: 'JÄRGI TÄHTE',
 
     description:
@@ -426,10 +681,23 @@ const translations = {
     welcome: 'Tere tulemast!',
 
     welcomeText:
-      'Sinu konto on loodud. Peagi algab siin ' +
-      'sinu teekond Petlemma tähe jälgedes.',
+      'Sinu teekond Petlemma tähe jälgedes algab siin.',
 
-    progress: 'Läbitud punkte: 0 / 15',
+    progress: 'Sinu edenemine',
+    adventureTitle: 'Tee tähe jälgedes',
+
+    adventureSubtitle:
+      'Järgi Petlemma tähte ja avasta järk-järgult jõululugu.',
+
+    available: 'Saadaval',
+    completed: 'Läbitud',
+    locked: 'Suletud',
+
+    mapNoteTitle: 'Sinu teekond algab!',
+
+    mapNoteText:
+      'Esimene punkt on märgitud tähega. Esimese loo avamiseks leia kohapealt QR-kood.',
+
     logout: 'Logi välja',
 
     footer: 'KOHTLA-JÄRVE · JÕULUSEIKLUS · 2026',
@@ -438,10 +706,10 @@ const translations = {
     nameRequired: 'Sisesta ees- ja perekonnanimi.',
 
     accountCreated:
-      'Konto loodi, kuid profiili salvestamine ebaõnnestus. ' +
-      'Võta korraldajaga ühendust.',
+      'Konto loodi, kuid profiili salvestamine ebaõnnestus. Võta korraldajaga ühendust.',
 
     errors: {
+
       'auth/email-already-in-use':
         'See e-posti aadress on juba registreeritud. Proovi sisse logida.',
 
@@ -517,12 +785,24 @@ function setLanguage(language) {
   document.getElementById('passwordLabel').textContent = t.password;
   document.getElementById('confirmLabel').textContent = t.confirm;
 
-  document.getElementById('welcomeTitle').textContent = t.welcome;
-  document.getElementById('welcomeText').textContent = t.welcomeText;
-  document.getElementById('progressText').textContent = t.progress;
+  document.getElementById('progressLabel').textContent = t.progress;
+  document.getElementById('adventureTitle').textContent = t.adventureTitle;
+  document.getElementById('adventureSubtitle').textContent = t.adventureSubtitle;
+
+  document.getElementById('legendAvailable').textContent = t.available;
+  document.getElementById('legendCompleted').textContent = t.completed;
+  document.getElementById('legendLocked').textContent = t.locked;
+
+  document.getElementById('mapNoteTitle').textContent = t.mapNoteTitle;
+  document.getElementById('mapNoteText').textContent = t.mapNoteText;
+
   document.getElementById('logoutButton').textContent = t.logout;
 
   updateModeText();
+
+  if (currentUserData) {
+    renderParticipantHome();
+  }
 
   localStorage.setItem('questLanguage', language);
 }
@@ -640,14 +920,12 @@ document.getElementById('authForm')
           return;
         }
 
-        // Создаём аккаунт Firebase Authentication
         const credential =
           await auth.createUserWithEmailAndPassword(
             email,
             password
           );
 
-        // Сохраняем профиль в Firestore
         await db.collection('users')
           .doc(credential.user.uid)
           .set({
@@ -669,7 +947,6 @@ document.getElementById('authForm')
 
       } else {
 
-        // Вход существующего пользователя
         await auth.signInWithEmailAndPassword(
           email,
           password
@@ -683,10 +960,6 @@ document.getElementById('authForm')
 
       showError(error);
 
-      // Если аккаунт уже создан, но запись профиля не удалась,
-      // пользователь остаётся авторизованным.
-      // Ошибка будет показана отдельно.
-
     } finally {
 
       button.disabled = false;
@@ -697,7 +970,99 @@ document.getElementById('authForm')
 
 
 // ========================================
-// 8. CHECK AUTHENTICATION STATE
+// 8. PARTICIPANT HOME AND STAR MAP
+// ========================================
+
+function renderParticipantHome() {
+
+  const t = translations[currentLanguage];
+
+  const userData = currentUserData || {};
+
+  const completed = Math.min(
+    15,
+    Math.max(0, Number(userData.completedPoints) || 0)
+  );
+
+  const percentage = (completed / 15) * 100;
+
+  // Прогресс
+
+  document.getElementById('progressNumber').textContent =
+    completed + ' / 15';
+
+  document.getElementById('progressFill').style.width =
+    percentage + '%';
+
+  // Приветствие
+
+  const fullName = userData.fullName || '';
+
+  document.getElementById('welcomeTitle').textContent =
+    t.welcome + (fullName ? ' ' + fullName : '');
+
+  document.getElementById('welcomeText').textContent =
+    t.welcomeText;
+
+  // Звёзды маршрута
+
+  const grid = document.getElementById('starsGrid');
+
+  grid.innerHTML = '';
+
+  for (let i = 1; i <= 15; i++) {
+
+    const point = document.createElement('div');
+
+    point.className = 'point';
+
+    const number = String(i).padStart(2, '0');
+
+    let symbol = '✧';
+    let status = t.locked;
+    let state = 'locked';
+
+    if (i <= completed) {
+
+      symbol = '✦';
+      status = t.completed;
+      state = 'completed';
+
+    } else if (i === completed + 1) {
+
+      symbol = '✦';
+      status = t.available;
+      state = 'available';
+
+    }
+
+    point.classList.add(state);
+
+    const star = document.createElement('div');
+    star.className = 'point-symbol';
+    star.textContent = symbol;
+
+    const pointNumber = document.createElement('div');
+    pointNumber.className = 'point-number';
+    pointNumber.textContent = number;
+
+    const pointStatus = document.createElement('div');
+    pointStatus.className = 'point-status';
+    pointStatus.textContent = status;
+
+    point.appendChild(star);
+    point.appendChild(pointNumber);
+    point.appendChild(pointStatus);
+
+    grid.appendChild(point);
+
+  }
+
+}
+
+
+// ========================================
+// 9. CHECK AUTHENTICATION STATE
 // ========================================
 
 auth.onAuthStateChanged(async function(user) {
@@ -712,6 +1077,8 @@ auth.onAuthStateChanged(async function(user) {
     document.getElementById('userMessage');
 
   userMessage.textContent = '';
+
+  currentUserData = null;
 
   if (!user) {
 
@@ -735,29 +1102,21 @@ auth.onAuthStateChanged(async function(user) {
       userMessage.textContent =
         translations[currentLanguage].accountCreated;
 
-      document.getElementById('welcomeTitle').textContent =
-        translations[currentLanguage].welcome;
+      currentUserData = {
+        fullName: user.displayName || '',
+        completedPoints: 0
+      };
 
     } else {
 
-      const userData = doc.data();
-
-      document.getElementById('welcomeTitle').textContent =
-        translations[currentLanguage].welcome +
-        ' ' + userData.fullName;
-
-      const completed =
-        Number(userData.completedPoints) || 0;
-
-      document.getElementById('progressText').textContent =
-        currentLanguage === 'ru'
-          ? 'Пройдено точек: ' + completed + ' из 15'
-          : 'Läbitud punkte: ' + completed + ' / 15';
+      currentUserData = doc.data();
 
     }
 
     document.getElementById('userEmail').textContent =
       user.email || '';
+
+    renderParticipantHome();
 
     authPanel.classList.add('hidden');
 
@@ -781,7 +1140,7 @@ auth.onAuthStateChanged(async function(user) {
 
 
 // ========================================
-// 9. LOGOUT
+// 10. LOGOUT
 // ========================================
 
 async function logout() {
@@ -800,7 +1159,7 @@ async function logout() {
 
 
 // ========================================
-// 10. INITIAL LANGUAGE
+// 11. INITIAL LANGUAGE
 // ========================================
 
 const savedLanguage =
