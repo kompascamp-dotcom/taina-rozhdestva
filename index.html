@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -131,9 +132,7 @@ input {
   outline: none;
 }
 
-input:focus {
-  border-color: #E8BD65;
-}
+input:focus { border-color: #E8BD65; }
 
 .primary {
   width: 100%;
@@ -218,7 +217,6 @@ footer {
     <h2 id="formTitle"></h2>
 
     <form id="authForm">
-
       <div id="nameField">
         <label id="fullNameLabel" for="fullName"></label>
         <input id="fullName" type="text"
@@ -240,7 +238,6 @@ footer {
       </div>
 
       <button class="primary" id="submitButton" type="submit"></button>
-
     </form>
 
     <button class="secondary" id="switchButton"
@@ -265,13 +262,11 @@ footer {
 
 </main>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
 <script>
-// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAxGk03U3bRCVIUKS2NIiH0FDw7lqZkk8",
   authDomain: "taina-rozhdestva.firebaseapp.com",
@@ -322,8 +317,10 @@ const translations = {
       'auth/invalid-credential': 'Неверная почта или пароль.',
       'auth/too-many-requests': 'Слишком много попыток. Попробуй позже.',
       'auth/unauthorized-domain': 'Этот домен не разрешён в Firebase.',
+      'auth/operation-not-allowed': 'Регистрация по электронной почте отключена в Firebase.',
+      'auth/network-request-failed': 'Не удалось подключиться к Firebase. Проверь интернет.',
       'permission-denied': 'Нет доступа к базе данных. Проверь правила Firestore.',
-      default: 'Не удалось выполнить действие. Попробуй ещё раз.'
+      default: 'Не удалось выполнить действие.'
     }
   },
 
@@ -359,8 +356,10 @@ const translations = {
       'auth/invalid-credential': 'Vale e-posti aadress või parool.',
       'auth/too-many-requests': 'Liiga palju katseid. Proovi hiljem uuesti.',
       'auth/unauthorized-domain': "See domeen pole Firebase'is lubatud.",
+      'auth/operation-not-allowed': 'E-posti teel registreerimine pole Firebase’is lubatud.',
+      'auth/network-request-failed': 'Firebase’iga ei õnnestunud ühendust luua. Kontrolli internetti.',
       'permission-denied': 'Andmebaasile puudub juurdepääs. Kontrolli Firestore reegleid.',
-      default: 'Toiming ebaõnnestus. Proovi uuesti.'
+      default: 'Toiming ebaõnnestus.'
     }
   }
 };
@@ -389,7 +388,6 @@ function setLanguage(language) {
   document.getElementById('logoutButton').textContent = t.logout;
 
   updateModeText();
-
   localStorage.setItem('questLanguage', language);
 }
 
@@ -424,14 +422,14 @@ function switchMode() {
 }
 
 function showError(error) {
-  const t = translations[currentLanguage];
-  const code = error.code || '';
-  const message =
-    t.errors[code] ||
-    (code === 'permission-denied' ? t.errors['permission-denied'] : null) ||
-    t.errors.default;
+  console.error('Firebase error:', error);
 
-  document.getElementById('message').textContent = message;
+  const code = error.code || 'unknown';
+  const details = error.message || 'Нет дополнительной информации';
+  const translated = translations[currentLanguage].errors[code];
+
+  document.getElementById('message').textContent =
+    'Ошибка: ' + code + ' — ' + (translated || details);
 }
 
 document.getElementById('authForm').addEventListener('submit', async function(event) {
@@ -477,8 +475,6 @@ document.getElementById('authForm').addEventListener('submit', async function(ev
       document.getElementById('message').textContent = t.nameRequired;
     } else if (error.message === 'PASSWORD_MISMATCH') {
       document.getElementById('message').textContent = t.passwordMismatch;
-    } else if (error.code === 'permission-denied') {
-      showError({code: 'permission-denied'});
     } else {
       showError(error);
     }
@@ -513,13 +509,20 @@ auth.onAuthStateChanged(async function(user) {
     userPanel.classList.remove('hidden');
 
   } catch (error) {
+    console.error('Profile loading error:', error);
     document.getElementById('userMessage').textContent =
-      translations[currentLanguage].errors.default;
+      'Ошибка загрузки профиля: ' + (error.code || error.message);
+    authPanel.classList.add('hidden');
+    userPanel.classList.remove('hidden');
   }
 });
 
 async function logout() {
-  await auth.signOut();
+  try {
+    await auth.signOut();
+  } catch (error) {
+    showError(error);
+  }
 }
 
 const savedLanguage = localStorage.getItem('questLanguage');
