@@ -1,560 +1,1405 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080F25">
 <title>Тайна Рождества — Следуй за звездой</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;min-height:100vh;padding:18px;background:radial-gradient(ellipse at 50% 10%,#263b60,transparent 55%),linear-gradient(180deg,#080f25,#101a32 70%,#080f25);color:#f5e8c8;font-family:Georgia,serif;text-align:center}
-main{max-width:650px;margin:auto;padding:5px 4px 40px}
-button{cursor:pointer;font-size:15px}
-.hidden{display:none!important}
-.language-switch{display:flex;justify-content:flex-end;gap:8px;margin-bottom:20px}
-.language-switch button{border:1px solid #65718a;border-radius:30px;background:transparent;color:#d4d9e5;padding:9px 17px}
-.language-switch button.active{background:#e8bd65;color:#080f25;border-color:#e8bd65;font-weight:bold}
-.star{font-size:70px;color:#e8bd65;text-shadow:0 0 35px #e8bd65}
-.name{font-size:12px;letter-spacing:3px;color:#e8bd65;text-transform:uppercase}
-h1{font-size:clamp(38px,9vw,58px);font-weight:normal;line-height:1.08;margin:15px 0}
-.subtitle{font-size:15px;letter-spacing:3px;color:#e8bd65}
-.description{font:15px/1.8 Arial,sans-serif;color:#d4d9e5;max-width:450px;margin:22px auto}
-.panel,.adventure,.story-card,.final-card{margin-top:25px;padding:24px 18px;border:1px solid #8e7548;border-radius:16px;background:rgba(232,189,101,.055);text-align:left}
-.panel h2,.adventure h2{text-align:center;color:#e8bd65;font-weight:normal;margin:0 0 20px}
-label{display:block;margin:14px 0 7px;color:#d4d9e5;font:13px Arial,sans-serif}
-input{width:100%;padding:13px;border:1px solid #65718a;border-radius:8px;background:#101a32;color:white;font-size:16px}
-.primary,.secondary{width:100%;padding:14px;border:0;border-radius:8px;margin-top:18px}
-.primary{background:#e8bd65;color:#080f25;font-weight:bold}
-.primary:disabled{opacity:.55}
-.secondary{background:transparent;color:#e8bd65;text-decoration:underline}
-.message{font:14px/1.6 Arial,sans-serif;color:#f3c979;text-align:center;margin-top:14px;overflow-wrap:anywhere}
-.welcome{text-align:center;font:15px/1.8 Arial,sans-serif;color:#d4d9e5}
-.welcome strong{color:#e8bd65;font-size:20px}
-.progress-section{margin-top:22px;padding:18px;background:#080f25aa;border:1px solid #394b69;border-radius:12px;font:14px Arial,sans-serif}
-.progress-heading{display:flex;justify-content:space-between;margin-bottom:12px}
-.progress-number{color:#e8bd65;font-weight:bold}
-.progress-track{height:9px;background:#263550;border-radius:20px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,#bd9146,#f5d58e);transition:width .3s}
-.adventure{background:rgba(8,15,37,.65)}
-.adventure-subtitle{text-align:center;color:#aeb9ce;font:13px/1.7 Arial,sans-serif}
-.stars-grid{display:flex;justify-content:center;margin:25px 0 8px}
-.point{width:170px;min-height:145px;border:1px solid #ffe3a7;border-radius:15px;background:linear-gradient(145deg,#f1d18b,#c99a4d);color:#101a32;box-shadow:0 0 25px #e8bd6533;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:7px}
-.point-symbol{font-size:48px}
-.point-number{font:bold 18px Arial}
-.point-status{font:12px Arial}
-.map-note{margin-top:20px;padding:15px;border:1px solid #394b69;border-radius:10px;color:#c4ccda;font:13px/1.7 Arial,sans-serif;text-align:center}
-.map-note strong{display:block;color:#e8bd65;margin-bottom:5px}
-.story-card{background:rgba(8,15,37,.75)}
-.story-number{text-align:center;color:#e8bd65;font:12px Arial,sans-serif;letter-spacing:2px}
-.story-title{text-align:center;color:#f5d58e;font-size:27px;font-weight:normal;line-height:1.3;margin:12px 0}
-.reference{text-align:center;color:#e8bd65;font:14px Arial,sans-serif;margin-bottom:20px}
-.story-text{font:15px/1.85 Arial,sans-serif;color:#e0e5ef;white-space:pre-line}
-.bible-link{display:block;text-align:center;margin:20px 0;color:#f5d58e;font:14px Arial,sans-serif}
-.question{margin-top:25px;padding-top:20px;border-top:1px solid #53617a}
-.question h3{color:#e8bd65;font:18px/1.5 Arial,sans-serif;text-align:center}
-.answer{display:block;width:100%;padding:13px;margin:10px 0;border:1px solid #65718a;border-radius:9px;background:#101a32;color:#f5e8c8;text-align:left;font:14px/1.5 Arial,sans-serif}
-.answer:disabled{opacity:.75;cursor:default}
-.answer.correct{border-color:#4cbd91;background:#173c36}
-.answer.wrong{border-color:#d76c6c;background:#48252b}
-.hint,.explanation{padding:14px;border-radius:9px;margin-top:15px;font:14px/1.7 Arial,sans-serif}
-.hint{background:#263550;color:#f5d58e}
-.explanation{background:#173c36;color:#c8f1df}
-.story-actions{display:flex;gap:10px;flex-wrap:wrap}
-.story-actions button{flex:1;min-width:130px}
-.final-card{text-align:center;background:radial-gradient(ellipse at 50% 0%,#59452655,transparent 70%),#101a32}
-.final-star{font-size:75px;color:#e8bd65;text-shadow:0 0 35px #e8bd65}
-.final-card h2{color:#e8bd65;font-weight:normal;font-size:30px}
-.final-card p{font:15px/1.9 Arial,sans-serif;color:#e0e5ef}
-.final-date{color:#f5d58e!important;font-size:19px!important}
-footer{margin-top:35px;color:#8994aa;font:11px Arial,sans-serif;letter-spacing:2px;line-height:1.8}
-@media(max-width:480px){body{padding:12px}.panel,.adventure,.story-card,.final-card{padding:20px 14px}.story-title{font-size:24px}}
+:root {
+  --bg:#080F25;
+  --panel:#111B35;
+  --panel2:#172443;
+  --gold:#F6C95D;
+  --gold2:#FFE7A0;
+  --text:#F5F2E9;
+  --muted:#AAB5CC;
+  --green:#4DD6A0;
+  --red:#FF7777;
+  --border:rgba(246,201,93,.22);
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(ellipse at 50% -10%,#23345d 0%,transparent 55%),
+    radial-gradient(ellipse at 90% 90%,#172348 0%,transparent 45%),
+    var(--bg);
+  font-family:Arial,Helvetica,sans-serif;
+}
+button,input {font:inherit}
+button {cursor:pointer}
+.hidden {display:none!important}
+.container {width:min(100% - 28px,720px);margin:auto;padding:24px 0 45px}
+header {text-align:center;margin-bottom:25px}
+.logo-star {
+  color:var(--gold);
+  font-size:54px;
+  line-height:1.2;
+  text-shadow:0 0 25px rgba(246,201,93,.5);
+}
+.brand {
+  color:var(--gold2);
+  font-family:Georgia,serif;
+  font-size:clamp(25px,6vw,38px);
+  letter-spacing:1px;
+  margin:5px 0;
+}
+.subtitle {color:var(--muted);font-size:14px;letter-spacing:2px}
+.panel {
+  background:linear-gradient(145deg,rgba(23,36,67,.97),rgba(14,24,48,.97));
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:22px;
+  margin:15px 0;
+  box-shadow:0 12px 35px rgba(0,0,0,.2);
+}
+h2,h3 {font-family:Georgia,serif;color:var(--gold2)}
+h2 {font-size:25px;margin:0 0 15px}
+h3 {font-size:20px;margin:20px 0 10px}
+p {line-height:1.7}
+.muted {color:var(--muted)}
+.small {font-size:13px}
+label {display:block;margin:13px 0 7px;color:var(--gold2);font-size:14px}
+input {
+  width:100%;padding:14px;border-radius:11px;
+  border:1px solid var(--border);background:#0B1530;
+  color:white;outline:none;
+}
+input:focus {border-color:var(--gold)}
+.btn {
+  border:0;border-radius:12px;padding:14px 18px;
+  background:linear-gradient(135deg,#F6C95D,#DCA83A);
+  color:#17203A;font-weight:bold;width:100%;margin-top:14px;
+}
+.btn:disabled {opacity:.5;cursor:not-allowed}
+.btn-secondary {
+  background:#243454;color:var(--text);
+  border:1px solid var(--border);
+}
+.btn-link {
+  background:none;border:0;color:var(--gold2);
+  text-decoration:underline;padding:10px;
+}
+.topline {display:flex;justify-content:space-between;align-items:center;gap:10px}
+.lang button {
+  border:1px solid var(--border);border-radius:8px;
+  padding:7px 10px;background:#152342;color:var(--muted);
+}
+.lang button.active {color:#18213a;background:var(--gold)}
+.progress-head {display:flex;justify-content:space-between;gap:10px}
+.progress-track {height:10px;background:#08132B;border-radius:20px;overflow:hidden;margin-top:10px}
+.progress-fill {height:100%;width:0;background:linear-gradient(90deg,#DCA83A,#FFE7A0);transition:width .3s}
+.next-star {text-align:center;padding:28px 10px}
+.big-star {
+  font-size:82px;color:var(--gold);
+  text-shadow:0 0 30px rgba(246,201,93,.5);
+}
+.point-number {color:var(--gold2);font-size:13px;letter-spacing:2px}
+.story-title {font-size:27px;text-align:center;margin:8px 0 5px}
+.reference {text-align:center;color:var(--gold);font-size:14px}
+.story-text {white-space:pre-line;line-height:1.8;font-size:16px}
+.bible-link {
+  display:block;text-align:center;margin:17px 0;
+  color:var(--gold2);text-decoration:underline;
+}
+.question {
+  padding:17px;border-radius:14px;background:#0B1732;
+  border:1px solid var(--border);margin-top:20px;
+}
+.option {
+  display:block;width:100%;text-align:left;
+  padding:14px;margin:9px 0;border-radius:11px;
+  color:var(--text);background:#172747;
+  border:1px solid rgba(255,255,255,.1);
+}
+.option:hover {border-color:var(--gold)}
+.option.selected {border:2px solid var(--gold);background:#283656}
+.option.correct {border:2px solid var(--green);background:#12382F}
+.option.wrong {border:2px solid var(--red);background:#40232E}
+.hint-box,.feedback {
+  padding:14px;border-radius:12px;margin-top:14px;
+  background:#26314B;border:1px solid var(--border);
+  line-height:1.6;
+}
+.feedback.success {border-color:var(--green)}
+.feedback.error {border-color:var(--red)}
+.final-star {font-size:90px;text-align:center;color:var(--gold)}
+.final-title {text-align:center;font-family:Georgia,serif;color:var(--gold2);font-size:30px}
+.final-date {text-align:center;color:var(--gold);font-size:20px;font-weight:bold}
+.center {text-align:center}
+footer {text-align:center;color:#7785A4;font-size:12px;margin-top:30px}
+#message {white-space:pre-line}
 </style>
 </head>
+
 <body>
-<main>
-<div class="language-switch">
-<button id="etButton" onclick="setLanguage('et')">Eesti</button>
-<button id="ruButton" onclick="setLanguage('ru')">Русский</button>
-</div>
-<div class="star">✦</div>
-<div class="name" id="name"></div>
-<h1 id="title"></h1>
-<div class="subtitle" id="subtitle"></div>
-<div class="description" id="description"></div>
+<div class="container">
 
-<section class="panel" id="authPanel">
-<h2 id="formTitle"></h2>
-<form id="authForm">
-<div id="nameField">
-<label id="fullNameLabel" for="fullName"></label>
-<input id="fullName" type="text" maxlength="80" autocomplete="name">
-</div>
-<label id="emailLabel" for="email"></label>
-<input id="email" type="email" required autocomplete="email">
-<label id="passwordLabel" for="password"></label>
-<input id="password" type="password" minlength="6" required>
-<div id="confirmField">
-<label id="confirmLabel" for="confirmPassword"></label>
-<input id="confirmPassword" type="password" minlength="6">
-</div>
-<button class="primary" id="submitButton" type="submit"></button>
-</form>
-<button class="secondary" id="switchButton" onclick="switchMode()"></button>
-<div class="message" id="message"></div>
+<header>
+  <div class="logo-star">✦</div>
+  <div class="brand">ТАЙНА РОЖДЕСТВА</div>
+  <div class="subtitle">СЛЕДУЙ ЗА ЗВЕЗДОЙ</div>
+  <div class="topline" style="justify-content:center;margin-top:16px">
+    <div class="lang">
+      <button id="ruButton" class="active" onclick="setLanguage('ru')">РУ</button>
+      <button id="etButton" onclick="setLanguage('et')">ET</button>
+    </div>
+  </div>
+</header>
+
+<section id="authPanel" class="panel">
+  <h2 id="authTitle">Начни своё путешествие</h2>
+  <p class="muted" id="authDescription">Зарегистрируйся, чтобы следовать за Вифлеемской звездой и сохранять свой прогресс.</p>
+
+  <form id="authForm">
+    <div id="nameField">
+      <label id="nameLabel" for="fullName">Твоё имя</label>
+      <input id="fullName" maxlength="30" autocomplete="name">
+    </div>
+
+    <label id="emailLabel" for="email">Электронная почта</label>
+    <input id="email" type="email" required autocomplete="email">
+
+    <label id="passwordLabel" for="password">Пароль</label>
+    <input id="password" type="password" minlength="6" required autocomplete="current-password">
+
+    <button class="btn" id="authSubmit" type="submit">Зарегистрироваться</button>
+  </form>
+
+  <div class="center">
+    <button class="btn-link" id="switchAuth" onclick="toggleAuthMode()">Уже есть аккаунт? Войти</button>
+  </div>
+  <p id="authError" class="small" style="color:#FF9999"></p>
 </section>
 
-<section class="panel hidden" id="userPanel">
-<div class="welcome">
-<strong id="welcomeTitle"></strong>
-<p id="welcomeText"></p>
-<p id="userEmail"></p>
-</div>
-<div class="progress-section">
-<div class="progress-heading">
-<span id="progressLabel"></span>
-<span class="progress-number" id="progressNumber">0 / 15</span>
-</div>
-<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-</div>
-<section class="adventure" id="adventure">
-<h2 id="adventureTitle"></h2>
-<p class="adventure-subtitle" id="adventureSubtitle"></p>
-<div class="stars-grid" id="starsGrid"></div>
-<div class="map-note"><strong id="mapNoteTitle"></strong><span id="mapNoteText"></span></div>
+<section id="userPanel" class="hidden">
+  <div class="panel">
+    <div class="topline">
+      <div>
+        <div class="muted small" id="welcomeLabel">Добро пожаловать</div>
+        <h2 id="welcomeName" style="margin:4px 0"></h2>
+      </div>
+      <button class="btn-link" onclick="logout()" id="logoutButton">Выйти</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="progress-head">
+      <strong id="progressLabel">Твой путь</strong>
+      <strong id="progressCount">0 / 15</strong>
+    </div>
+    <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+    <p id="progressText" class="muted small">Ты только начинаешь своё путешествие.</p>
+  </div>
+
+  <section id="adventure" class="panel">
+    <h2 id="adventureTitle">Следуй за звездой</h2>
+    <p id="adventureText" class="muted">Впереди тебя ждут 15 звёзд. Найди следующую звезду на маршруте и отсканируй её QR-код.</p>
+    <div class="next-star">
+      <div class="big-star">✦</div>
+      <div class="point-number" id="nextPointNumber">ЗВЕЗДА 01</div>
+      <h2 id="nextPointTitle">Твоя следующая звезда</h2>
+      <p class="muted" id="nextPointDescription">Найди QR-код этой звезды в городе.</p>
+    </div>
+    <p class="small muted center" id="qrNotice">Каждая звезда открывается только после прохождения предыдущей.</p>
+  </section>
+
+  <section id="storyPanel" class="panel hidden">
+    <div class="center point-number" id="storyPointNumber">ЗВЕЗДА 01</div>
+    <h2 class="story-title" id="storyTitle"></h2>
+    <div class="reference" id="storyReference"></div>
+    <div class="story-text" id="storyText"></div>
+    <a id="bibleLink" class="bible-link" href="#" target="_blank" rel="noopener">Прочитать библейский отрывок</a>
+
+    <div class="question">
+      <h3 id="questionTitle">Вопрос</h3>
+      <p id="questionText"></p>
+      <div id="options"></div>
+      <button class="btn btn-secondary" id="hintButton" onclick="showHint()">Показать подсказку</button>
+      <div id="hintBox" class="hint-box hidden"></div>
+      <button class="btn" id="answerButton" onclick="checkAnswer()" disabled>Проверить ответ</button>
+      <div id="feedback" class="feedback hidden"></div>
+      <button class="btn hidden" id="continueButton" onclick="continueAfterAnswer()">Продолжить путь</button>
+    </div>
+    <button class="btn-link" onclick="showHome()" id="backButton">Вернуться к карте</button>
+  </section>
+
+  <section id="finalPanel" class="panel hidden">
+    <div class="final-star">✦</div>
+    <div class="final-title" id="finalTitle">ТЫ НАШЁЛ ЗВЕЗДУ!</div>
+    <p class="center" style="color:var(--gold);letter-spacing:2px">ТАЙНА РОЖДЕСТВА · 2026</p>
+    <p id="finalText" class="center" style="line-height:1.8"></p>
+    <div class="final-date">24 декабря 2026 · 17:00</div>
+    <h2 class="center">Tuuslari 20</h2>
+    <p class="center" id="finalInvite">Ждём тебя на рождественском празднике!</p>
+  </section>
 </section>
-<section class="story-card hidden" id="storyPanel">
-<div class="story-number" id="storyNumber"></div>
-<h2 class="story-title" id="storyTitle"></h2>
-<div class="reference" id="storyReference"></div>
-<div class="story-text" id="storyText"></div>
-<a class="bible-link" id="bibleLink" target="_blank" rel="noopener"></a>
-<div class="question">
-<h3 id="questionText"></h3>
-<div id="answers"></div>
-<div class="hint hidden" id="hintBox"></div>
-<div class="explanation hidden" id="explanationBox"></div>
+
+<footer>ТАЙНА РОЖДЕСТВА · 2026</footer>
 </div>
-<div class="story-actions">
-<button class="secondary hidden" id="homeButton" onclick="showHome()"></button>
-<button class="primary hidden" id="nextButton" onclick="showHome()"></button>
-</div>
-</section>
-<section class="final-card hidden" id="finalPanel">
-<div class="final-star">✦</div>
-<h2 id="finalTitle"></h2>
-<p id="finalText"></p>
-<p class="final-date" id="finalDate"></p>
-<p id="finalAddress"></p>
-<p id="finalInvite"></p>
-</section>
-<button class="primary" id="logoutButton" onclick="logout()"></button>
-<div class="message" id="userMessage"></div>
-</section>
-<footer id="footer"></footer>
-</main>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
-// ============================================
-// FIREBASE — СОХРАНЕНЫ ПРЕЖНИЕ НАСТРОЙКИ
-// ============================================
-const firebaseConfig={
-apiKey:"AIzaSyAxGk03U3bRCVIUKS2NIiH0FDw7lqZkk8",
-authDomain:"taina-rozhdestva.firebaseapp.com",
-projectId:"taina-rozhdestva",
-storageBucket:"taina-rozhdestva.firebasestorage.app",
-messagingSenderId:"645042469070",
-appId:"1:645042469070:web:e50b1e7076307838b5f89f"
+// ========================================
+// FIREBASE — СУЩЕСТВУЮЩИЙ ПРОЕКТ
+// ========================================
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAxGk03U3bRCVIUKS2NIiH0FDw7lqZkk8",
+  authDomain: "taina-rozhdestva.firebaseapp.com",
+  projectId: "taina-rozhdestva",
+  storageBucket: "taina-rozhdestva.firebasestorage.app",
+  messagingSenderId: "645042469070",
+  appId: "1:645042469070:web:e50b1e7076307838b5f89f"
 };
+
 firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();
-const db=firebase.firestore();
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-let currentLanguage=localStorage.getItem('questLanguage')==='et'?'et':'ru';
-let mode='register';
-let currentUserData=null;
-let currentPoint=null;
-let answerSubmitted=false;
+// ========================================
+// ИСТОРИИ, ВОПРОСЫ И ОТВЕТЫ
+// correct — номер правильного варианта,
+// начиная с нуля.
+// ========================================
 
-const T={
-ru:{
-name:'Рождественский городской квест',title:'Тайна<br>Рождества',subtitle:'СЛЕДУЙ ЗА ЗВЕЗДОЙ',
-description:'Одна история. Один путь к Рождеству.<br><br>Отправься в путешествие по улицам Кохтла-Ярве, следуй за Вифлеемской звездой и открой историю первого Рождества.',
-register:'Создать аккаунт',login:'Войти в аккаунт',fullName:'Имя и фамилия',email:'Электронная почта',password:'Пароль',confirm:'Повтори пароль',create:'Зарегистрироваться',enter:'Войти',switchLogin:'Уже есть аккаунт? Войти',switchRegister:'Нет аккаунта? Зарегистрироваться',welcome:'Добро пожаловать!',welcomeText:'Твоё путешествие за Вифлеемской звездой начинается здесь.',progress:'Твой прогресс',adventureTitle:'Путь за звездой',adventureSubtitle:'Открывай историю Рождества шаг за шагом. Следующая звезда появится после правильного ответа.',available:'Открыть следующую звезду',mapNoteTitle:'Твоё путешествие продолжается!',mapNoteText:'Найди QR-код следующей звезды на месте и отсканируй его, чтобы открыть историю.',logout:'Выйти из аккаунта',footer:'KOHTLA-JÄRVE · CHRISTMAS QUEST · 2026',point:'ЗВЕЗДА',question:'Проверь, что ты запомнил',hint:'Подсказка',bible:'Прочитать библейский отрывок',home:'Вернуться к звезде',next:'Продолжить путешествие',correct:'Верно! Ты открыл следующую звезду.',wrong:'Это не совсем верно. Попробуй ещё раз.',finalTitle:'ТЫ НАШЁЛ ЗВЕЗДУ!',finalText:'Ты прошёл весь путь. От древнего обещания до рождения Иисуса Христа. Но самое главное сокровище этого путешествия — не найденные звёзды, а истина, которую они открывали. Бог так возлюбил мир, что отдал Своего Сына. Теперь приглашаем тебя разделить радость Рождества вместе с нами!',finalDate:'24 декабря 2026 · 17:00',finalAddress:'Tuuslari 20',finalInvite:'Ждём тебя на рождественском празднике!',errors:{'auth/email-already-in-use':'Эта почта уже зарегистрирована. Попробуй войти.','auth/invalid-email':'Проверь адрес электронной почты.','auth/weak-password':'Пароль должен содержать не менее 6 символов.','auth/user-not-found':'Аккаунт не найден.','auth/invalid-credential':'Неверная почта или пароль.','auth/too-many-requests':'Слишком много попыток. Попробуй позже.','auth/unauthorized-domain':'Этот домен не разрешён в Firebase.','auth/operation-not-allowed':'Регистрация по электронной почте отключена в Firebase.','auth/network-request-failed':'Проверь подключение к интернету.','permission-denied':'Нет доступа к базе данных. Проверь правила Firestore.'},defaultError:'Не удалось выполнить действие.'},
-et:{
-name:'Jõulude linnaseiklus',title:'Jõulude<br>saladus',subtitle:'JÄRGI TÄHTE',
-description:'Üks lugu. Üks tee jõuludeni.<br><br>Alusta rännakut Kohtla-Järve tänavatel, järgi Petlemma tähte ja avasta esimeste jõulude lugu.',
-register:'Loo konto',login:'Logi sisse',fullName:'Ees- ja perekonnanimi',email:'E-posti aadress',password:'Parool',confirm:'Korda parooli',create:'Registreeru',enter:'Logi sisse',switchLogin:'Konto on juba olemas? Logi sisse',switchRegister:'Kontot pole? Registreeru',welcome:'Tere tulemast!',welcomeText:'Sinu teekond Petlemma tähe jälgedes algab siin.',progress:'Sinu edenemine',adventureTitle:'Tee tähe jälgedes',adventureSubtitle:'Avasta jõululugu samm-sammult. Järgmine täht avaneb pärast õiget vastust.',available:'Ava järgmine täht',mapNoteTitle:'Sinu teekond jätkub!',mapNoteText:'Leia järgmise tähe juurest QR-kood ja skaneeri see loo avamiseks.',logout:'Logi välja',footer:'KOHTLA-JÄRVE · JÕULUSEIKLUS · 2026',point:'TÄHT',question:'Kontrolli, mida õppisid',hint:'Vihje',bible:'Loe piibliteksti',home:'Tagasi tähe juurde',next:'Jätka teekonda',correct:'Õige! Avanes järgmine täht.',wrong:'See pole päris õige. Proovi uuesti.',finalTitle:'LEIDSID TÄHE!',finalText:'Oled läbinud kogu teekonna. Alates iidsest tõotusest kuni Jeesuse Kristuse sünnini. Kuid selle teekonna suurim aare ei ole leitud tähed, vaid tõde, mida need avasid. Jumal on maailma nõnda armastanud, et Ta andis oma Poja. Kutsume sind nüüd jagama koos meiega jõulurõõmu!',finalDate:'24. detsember 2026 · 17:00',finalAddress:'Tuuslari 20',finalInvite:'Ootame sind jõulupeole!',errors:{'auth/email-already-in-use':'See e-posti aadress on juba registreeritud. Proovi sisse logida.','auth/invalid-email':'Kontrolli e-posti aadressi.','auth/weak-password':'Parool peab sisaldama vähemalt 6 märki.','auth/user-not-found':'Kontot ei leitud.','auth/invalid-credential':'Vale e-posti aadress või parool.','auth/too-many-requests':'Liiga palju katseid. Proovi hiljem uuesti.','auth/unauthorized-domain':'See domeen pole Firebase’is lubatud.','auth/operation-not-allowed':'E-posti teel registreerimine pole Firebase’is lubatud.','auth/network-request-failed':'Kontrolli internetiühendust.','permission-denied':'Andmebaasile puudub juurdepääs. Kontrolli Firestore reegleid.'},defaultError:'Toiming ebaõnnestus.'}
-};
+const POINTS = [
+{
+  ref:'Исаия 9:6', bible:'Isaiah 9:6', correct:1,
+  ru:{
+    title:'Обещание сквозь века',
+    story:`Представь время, когда Иисус ещё не родился. Люди жили в тревоге, не знали, что ждёт их впереди, и надеялись на Божью помощь.
 
-// ============================================
-// 15 РОЖДЕСТВЕНСКИХ ИСТОРИЙ И ВОПРОСОВ
-// correct — номер правильного ответа, начиная с 0
-// ============================================
-const POINTS=[
-{
-ref:'Исаия 9:6',bible:'Isaiah 9:6',
-ru:{title:'Обещание сквозь века',story:'Представь время, когда Иисус ещё не родился. Люди жили в тревоге, переживали войны и трудности, но продолжали надеяться на Божью помощь.\\n\\nЗадолго до Рождества Бог говорил через пророков о Спасителе, Который однажды придёт в мир. Пророк Исаия передал удивительное обещание: родится Младенец, и будет дан Сын. Он будет не просто обычным царём. Его назовут Чудным Советником, Богом крепким, Отцом вечности и Князем мира.\\n\\nЛюди ещё не знали, когда исполнится это обещание и как именно придёт Спаситель. Но Бог уже приготовил путь. Рождественская история началась не в Вифлееме — о ней было возвещено за много веков до рождения Иисуса.',q:'О Ком пророк Исаия говорил в своём обещании?',a:['О царе Давиде','О будущем Спасителе — Иисусе','О пророке Илии'],correct:1,hint:'Это обещание говорит о Младенце, Который принесёт людям мир.',explain:'Исаия пророчествовал о рождении Иисуса Христа. Рождество было частью Божьего замысла задолго до того, как Мария и Иосиф отправились в Вифлеем.'},
-et:{title:'Tõotus läbi aegade',story:'Kujuta ette aega, mil Jeesus ei olnud veel sündinud. Inimesed elasid mures, kogesid sõdu ja raskusi, kuid lootsid endiselt Jumala abile.\\n\\nJuba ammu enne jõule rääkis Jumal prohvetite kaudu Päästjast, kes ühel päeval maailma tuleb. Prohvet Jesaja kuulutas imelise tõotuse: meile sünnib Laps ja meile antakse Poeg. Teda nimetatakse Imeliseks Nõuandjaks, Vägevaks Jumalaks, Igaveseks Isaks ja Rahuvürstiks.\\n\\nInimesed ei teadnud veel, millal tõotus täitub. Kuid Jumal oli oma tee juba valmistanud.',q:'Kellest rääkis prohvet Jesaja?',a:['Kuningas Taavetist','Tulevasest Päästjast — Jeesusest','Prohvet Eelijast'],correct:1,hint:'Tõotus räägib Lapsest, kes toob inimestele rahu.',explain:'Jesaja kuulutas ette Jeesuse Kristuse sündi. Jumala plaan oli olemas juba ammu enne Petlemma sündmusi.'}
+Но задолго до Рождества Бог уже говорил через пророков о Спасителе, Который однажды придёт в этот мир.
+
+Пророк Исаия жил за много лет до рождения Иисуса. Он передал удивительное обещание: родится Младенец, Сын будет дан людям, и на Его плечах будет власть. Его назовут Чудный Советник, Бог крепкий, Отец вечности, Князь мира.
+
+Это обещание давало людям надежду. Бог не забыл Свой народ. Спаситель должен был прийти не как обычный земной правитель, а как Тот, Кто принесёт людям Божий мир и спасение.
+
+Рождественская история начинается не в Вифлееме. Она начинается с Божьего обещания, которое люди ждали многие годы.`,
+    question:'Что Бог обещал через пророка Исаию?',
+    options:['Что на земле больше не будет трудностей.','Что родится Младенец — обещанный Спаситель.','Что появится новый земной дворец.'],
+    hint:'Прочитай слова пророка о Младенце, Который будет назван Князем мира.',
+    explanation:'Исаия говорил о рождении Сына, Который принесёт Божий мир. Это пророчество указывает на Иисуса Христа.'
+  },
+  et:{
+    title:'Lubadus läbi sajandite',
+    story:`Kujuta ette aega, mil Jeesus ei olnud veel sündinud. Inimesed elasid mures, ei teadnud, mida tulevik toob, ja lootsid Jumala abile.
+
+Kuid juba kaua enne jõule rääkis Jumal prohvetite kaudu Päästjast, kes ühel päeval maailma tuleb.
+
+Prohvet Jesaja elas palju aastaid enne Jeesuse sündi. Ta kuulutas hämmastava lubaduse: sünnib Laps, antakse Poeg ning Tema õlgadel on valitsus. Teda nimetatakse Imeliseks Nõuandjaks, Vägevaks Jumalaks, Igaveseks Isaks ja Rahuvürstiks.
+
+See lubadus andis inimestele lootust. Jumal ei olnud oma rahvast unustanud. Päästja pidi tulema mitte tavalise maise valitsejana, vaid tooma inimestele Jumala rahu ja pääste.
+
+Jõululugu ei alga Petlemmas. See algab Jumala lubadusest, mida inimesed ootasid palju aastaid.`,
+    question:'Mida Jumal prohvet Jesaja kaudu lubas?',
+    options:['Et maa peal ei ole enam kunagi raskusi.','Et sünnib Laps — tõotatud Päästja.','Et ehitatakse uus kuningapalee.'],
+    hint:'Loe prohveti sõnu Lapse kohta, keda nimetatakse Rahuvürstiks.',
+    explanation:'Jesaja kuulutas ette Poja sündi, kes toob Jumala rahu. See ennustus viitab Jeesusele Kristusele.'
+  }
 },
 {
-ref:'Луки 1:5–25',bible:'Luke 1:5-25',
-ru:{title:'Голос, который замолчал',story:'В Иудее жил священник по имени Захария. Его жена Елисавета тоже была из священнического рода. Они любили Бога и старались жить праведно, но у них не было детей. Они уже состарились и, вероятно, давно перестали ждать перемен.\\n\\nОднажды, когда Захария совершал служение в храме, ему явился ангел Господень. Захария испугался, но ангел сказал, что его молитва услышана: Елисавета родит сына. Ему нужно будет дать имя Иоанн. Этот ребёнок приготовит народ к приходу Господа.\\n\\nЗахария усомнился, потому что они с женой были уже в преклонном возрасте. Тогда ангел открыл ему своё имя — Гавриил — и сказал, что Захария не сможет говорить до исполнения обещания. Вскоре Елисавета действительно узнала, что ждёт ребёнка.',q:'Как звали ангела, который принёс Захарии весть?',a:['Михаил','Рафаил','Гавриил'],correct:2,hint:'Это тот же ангел, который позже придёт к Марии.',explain:'Ангел назвался Гавриилом. Он принёс Захарии весть о рождении Иоанна Крестителя, который приготовит путь Господу.'},
-et:{title:'Vaikseks jäänud hääl',story:'Juudamaal elas preester Sakarias. Tema naine Eliisabet oli samuti preestrisoost. Nad armastasid Jumalat, kuid neil ei olnud lapsi. Nad olid juba vanad ega oodanud enam suuri muutusi.\\n\\nÜhel päeval, kui Sakarias templis teenis, ilmus talle Issanda ingel. Sakarias ehmus, kuid ingel ütles, et tema palvet on kuuldud: Eliisabet sünnitab poja, kellele tuleb nimeks panna Johannes. Laps valmistab rahva ette Issanda tulekuks.\\n\\nSakarias kahtles, sest nad olid mõlemad eakad. Ingel ütles oma nimeks Gabriel ja teatas, et Sakarias ei saa rääkida, kuni tõotus täitub. Peagi selgus, et Eliisabet ootab tõesti last.',q:'Mis oli ingli nimi, kes tõi Sakariasele sõnumi?',a:['Miikael','Rafael','Gabriel'],correct:2,hint:'Sama ingel külastab hiljem ka Maarjat.',explain:'Ingel oli Gabriel. Ta teatas Ristija Johannese sünnist.'}
+  ref:'Луки 1:5–25', bible:'Luke 1:5-25', correct:2,
+  ru:{
+    title:'Голос, который замолчал',
+    story:`Во времена царя Ирода жил священник по имени Захария. Его жена Елисавета тоже была праведной перед Богом. Они любили Господа, но у них не было детей, и оба уже были в преклонном возрасте.
+
+Однажды Захария исполнял служение в храме. Когда он вошёл, чтобы совершить каждение, ему явился ангел Господень. Захария испугался, но ангел сказал ему не бояться.
+
+Ангел сообщил удивительную новость: у Захарии и Елисаветы родится сын. Его нужно будет назвать Иоанном. Он принесёт многим радость и приготовит народ к приходу Господа.
+
+Захария не смог поверить этим словам. Он спросил, как такое возможно в их возрасте. Тогда ангел открыл ему, что Захария будет молчать до того дня, когда обещание исполнится.
+
+И действительно, когда Захария вышел из храма, он не мог говорить. Бог готовил особенное событие, а рождение Иоанна должно было стать началом этой истории.`,
+    question:'Как звали сына, о рождении которого ангел сообщил Захарии?',
+    options:['Иисус.','Иосиф.','Иоанн.'],
+    hint:'Это имя начинается на букву «И». Позже этот человек будет известен как тот, кто приготовил путь Господу.',
+    explanation:'Ангел сказал Захарии назвать сына Иоанном. Иоанн Креститель должен был приготовить людей к приходу Иисуса.'
+  },
+  et:{
+    title:'Hääl, mis vaikis',
+    story:`Kuningas Heroodese ajal elas preester nimega Sakarias. Tema naine Eliisabet oli samuti Jumala ees õiglane. Nad armastasid Issandat, kuid neil ei olnud lapsi ja mõlemad olid juba eakad.
+
+Ühel päeval teenis Sakarias templis. Kui ta läks suitsutusohvrit tooma, ilmus talle Issanda ingel. Sakarias ehmus, kuid ingel ütles talle, et ta ei kardaks.
+
+Ingel teatas hämmastava uudise: Sakariasele ja Eliisabetile sünnib poeg. Tema nimeks tuleb panna Johannes. Ta toob paljudele rõõmu ja valmistab rahvast ette Issanda tulekuks.
+
+Sakarias ei suutnud neid sõnu uskuda. Ta küsis, kuidas see nende vanuses võimalik on. Siis ütles ingel, et Sakarias jääb tummaks kuni päevani, mil lubadus täitub.
+
+Ja tõepoolest, kui Sakarias templist väljus, ei saanud ta rääkida. Jumal valmistas ette erilist sündmust ning Johannese sünd pidi saama selle loo alguseks.`,
+    question:'Mis nime pidi ingli sõnul saama Sakariase poeg?',
+    options:['Jeesus.','Joosep.','Johannes.'],
+    hint:'See mees valmistas hiljem inimestele ette teed Issanda juurde.',
+    explanation:'Ingel ütles, et poja nimeks tuleb panna Johannes. Ristija Johannes valmistas inimesi ette Jeesuse tulekuks.'
+  }
 },
 {
-ref:'Луки 1:26–38',bible:'Luke 1:26-38',
-ru:{title:'Весть для Марии',story:'Когда Елисавета была уже на шестом месяце беременности, Бог послал ангела Гавриила в город Назарет, к молодой девушке по имени Мария. Она была обручена с Иосифом, происходившим из рода Давида.\\n\\nАнгел вошёл к Марии и приветствовал её словами о том, что Господь с ней. Мария смутилась и не понимала, что означает это приветствие. Гавриил объяснил: она родит Сына и назовёт Его Иисусом. Он будет велик и назовётся Сыном Всевышнего.\\n\\nМария спросила, как это произойдёт, ведь она не знает мужа. Ангел ответил, что Дух Святой сойдёт на неё и сила Всевышнего осенит её. Мария смиренно ответила, что она раба Господня и пусть будет ей по слову Божьему.',q:'Как Мария ответила на слова ангела?',a:['«Я раба Господня; да будет Мне по слову твоему»','«Я не хочу этого»','«Сначала спроси Иосифа»'],correct:0,hint:'Мария доверилась Богу и согласилась принять Его волю.',explain:'Мария ответила с верой и смирением. Она не знала всех подробностей будущего, но доверилась Богу.'},
-et:{title:'Sõnum Maarjale',story:'Kui Eliisabet oli kuuendat kuud lapseootel, saatis Jumal ingel Gabrieli Naatsaretti noore neiu Maarja juurde. Maarja oli kihlatud Joosepiga, kes pärines Taaveti soost.\\n\\nIngel tervitas Maarjat ja ütles, et Issand on temaga. Maarja ehmus ega mõistnud tervituse tähendust. Gabriel selgitas, et ta sünnitab Poja ja paneb Talle nimeks Jeesus. Teda nimetatakse Kõigekõrgema Pojaks.\\n\\nMaarja küsis, kuidas see saab sündida. Ingel vastas, et Püha Vaim tuleb tema peale ja Kõigekõrgema vägi katab teda. Maarja vastas alandlikult, et ta on Issanda teenija ja sündigu temale ingli sõna järgi.',q:'Kuidas Maarja ingli sõnumile vastas?',a:['„Vaata, siin on Issanda teenija; sündigu mulle sinu sõna järgi“','„Ma ei taha seda“','„Küsi kõigepealt Joosepilt“'],correct:0,hint:'Maarja usaldas Jumalat ja nõustus Tema tahtega.',explain:'Maarja vastas usu ja alandlikkusega. Ta usaldas Jumalat ka siis, kui ei teadnud kõiki tuleviku üksikasju.'}
+  ref:'Луки 1:26–38', bible:'Luke 1:26-38', correct:1,
+  ru:{
+    title:'Весть для Марии',
+    story:`В небольшом городе Назарете жила молодая девушка по имени Мария. Она была обручена с Иосифом.
+
+Однажды Бог послал к Марии ангела Гавриила. Ангел вошёл к ней и сказал: «Радуйся, Благодатная! Господь с Тобою».
+
+Мария смутилась и не понимала, что означают эти слова. Тогда ангел объяснил, что она обрела благодать у Бога и родит Сына. Ему нужно будет дать имя Иисус.
+
+Ангел рассказал, что этот Сын будет велик и назовётся Сыном Всевышнего. Бог даст Ему престол Давида, и Царству Его не будет конца.
+
+Мария спросила, как это произойдёт. Ангел объяснил, что это будет действие Святого Духа и сила Всевышнего осенит её.
+
+Мария ответила с доверием: «Се, Раба Господня; да будет Мне по слову твоему». Она не знала всех подробностей будущего, но доверилась Богу и приняла Его волю.`,
+    question:'Как звали ангела, который принёс Марии весть от Бога?',
+    options:['Михаил.','Гавриил.','Рафаил.'],
+    hint:'Его имя уже встречалось в истории Захарии.',
+    explanation:'Марии явился ангел Гавриил. Он сообщил ей, что она родит Иисуса — Сына Всевышнего.'
+  },
+  et:{
+    title:'Sõnum Maarjale',
+    story:`Väikeses Naatsareti linnas elas noor naine nimega Maarja. Ta oli kihlatud Joosepiga.
+
+Ühel päeval saatis Jumal Maarja juurde ingel Gabrieli. Ingel astus tema juurde ja ütles: „Rõõmusta, sa armuleidnu! Issand on sinuga!”
+
+Maarja ehmus ega mõistnud, mida need sõnad tähendavad. Ingel selgitas, et ta on leidnud armu Jumala juures ja sünnitab Poja. Tema nimeks tuleb panna Jeesus.
+
+Ingel rääkis, et see Poeg saab suureks ja teda nimetatakse Kõigekõrgema Pojaks. Jumal annab talle Taaveti trooni ja tema kuningriigil ei ole lõppu.
+
+Maarja küsis, kuidas see sünnib. Ingel selgitas, et see toimub Püha Vaimu läbi ja Kõigekõrgema vägi tuleb tema üle.
+
+Maarja vastas usaldusega: „Vaata, siin on Issanda teenija; sündigu mulle sinu sõna järgi.” Ta ei teadnud kõiki tuleviku üksikasju, kuid usaldas Jumalat ja võttis vastu Tema tahte.`,
+    question:'Mis oli selle ingli nimi, kes tõi Maarjale Jumala sõnumi?',
+    options:['Miikael.','Gabriel.','Rafael.'],
+    hint:'Tema nimi esines juba Sakariase loos.',
+    explanation:'Maarja juurde tuli ingel Gabriel. Ta teatas, et Maarja sünnitab Jeesuse, Kõigekõrgema Poja.'
+  }
 },
 {
-ref:'Луки 1:39–56',bible:'Luke 1:39-56',
-ru:{title:'Радость, которую невозможно скрыть',story:'Узнав о Божьем обещании, Мария отправилась в горную местность, в город Иудин, чтобы навестить свою родственницу Елисавету.\\n\\nКогда Мария вошла в дом и поздоровалась с Елисаветой, младенец во чреве Елисаветы взыграл. Елисавета исполнилась Святого Духа и громко сказала, что Мария благословенна между женщинами и благословен плод её чрева.\\n\\nЕлисавета назвала Марию матерью Господа. Она радовалась тому, что Мария поверила словам Бога. В ответ Мария прославила Господа. Она говорила о Божьей милости, о том, что Бог помнит Своих людей и помогает смиренным. Эта встреча была наполнена радостью и благодарностью.',q:'Как Елисавета отреагировала на приход Марии?',a:['Она исполнилась Святого Духа и благословила Марию','Она рассердилась','Она не узнала Марию'],correct:0,hint:'Елисавета почувствовала особенную радость ещё до рождения ребёнка.',explain:'Елисавета исполнилась Святого Духа и назвала Марию благословенной. Она узнала, что Бог совершает великое дело.'},
-et:{title:'Rõõm, mida ei saa peita',story:'Saanud teada Jumala tõotusest, läks Maarja mäestikumaale Juuda linna oma sugulase Eliisabeti juurde.\\n\\nKui Maarja tervitas Eliisabetti, hüppas laps Eliisabeti ihus. Eliisabet täitus Püha Vaimuga ja hüüdis, et Maarja on õnnistatud naiste seas ja õnnistatud on tema ihu vili.\\n\\nEliisabet nimetas Maarjat oma Issanda emaks. Ta rõõmustas, et Maarja uskus Jumala sõnu. Maarja vastas Jumalat kiites. Ta rääkis Jumala halastusest ja sellest, et Jumal hoolitseb alandlike eest.',q:'Kuidas Eliisabet Maarja saabumisele reageeris?',a:['Ta täitus Püha Vaimuga ja õnnistas Maarjat','Ta vihastas','Ta ei tundnud Maarjat ära'],correct:0,hint:'Eliisabet tundis erilist rõõmu juba enne lapse sündi.',explain:'Eliisabet täitus Püha Vaimuga ja nimetas Maarjat õnnistatuks.'}
+  ref:'Луки 1:39–56', bible:'Luke 1:39-56', correct:0,
+  ru:{
+    title:'Радость, которую невозможно скрыть',
+    story:`После встречи с ангелом Мария отправилась в горную местность, в город Иудин, к своей родственнице Елисавете.
+
+Когда Мария вошла в дом и поздоровалась с Елисаветой, произошло удивительное: младенец во чреве Елисаветы взыграл, а сама Елисавета исполнилась Святого Духа.
+
+Она громко сказала Марии, что та благословенна между женщинами и благословен плод её чрева. Елисавета назвала Марию матерью Господа своего.
+
+Мария ответила прекрасными словами хвалы Богу. Она прославляла Господа за то, что Он обратил внимание на смирение Своей рабы и совершил для неё великое.
+
+Мария не стала хвастаться собой. Она направила всю славу Богу. Её сердце было наполнено радостью и благодарностью.
+
+Иногда настоящая радость настолько велика, что её невозможно удержать внутри. Мария поделилась своей радостью, а Елисавета встретила её с верой и благословением.`,
+    question:'Что произошло, когда Мария поприветствовала Елисавету?',
+    options:['Младенец во чреве Елисаветы взыграл.','Захария снова начал говорить.','В дом пришли пастухи.'],
+    hint:'Обрати внимание на то, что сделал ребёнок ещё до своего рождения.',
+    explanation:'Когда Елисавета услышала приветствие Марии, младенец взыграл во чреве её. Елисавета исполнилась Святого Духа.'
+  },
+  et:{
+    title:'Rõõm, mida ei saa varjata',
+    story:`Pärast kohtumist ingliga läks Maarja mägisele Juudamaale, ühte linna, oma sugulase Eliisabeti juurde.
+
+Kui Maarja majja astus ja Eliisabetti tervitas, juhtus midagi imelist: laps Eliisabeti ihus hüppas ning Eliisabet sai täis Püha Vaimu.
+
+Ta hüüdis valju häälega, et Maarja on õnnistatud naiste seas ja õnnistatud on tema ihuvili. Eliisabet nimetas Maarjat oma Issanda emaks.
+
+Maarja vastas ilusate kiitusesõnadega Jumalale. Ta ülistas Issandat selle eest, et Jumal vaatas oma teenija alandlikkuse peale ja tegi tema heaks suuri asju.
+
+Maarja ei kiitnud iseennast. Ta andis kogu au Jumalale. Tema süda oli täis rõõmu ja tänulikkust.
+
+Mõnikord on tõeline rõõm nii suur, et seda on võimatu enda sees hoida. Maarja jagas oma rõõmu ning Eliisabet võttis ta vastu usu ja õnnistusega.`,
+    question:'Mis juhtus siis, kui Maarja Eliisabetti tervitas?',
+    options:['Laps hüppas Eliisabeti ihus.','Sakarias hakkas jälle rääkima.','Karjased tulid majja.'],
+    hint:'Mõtle sellele, mida tegi laps juba enne sündimist.',
+    explanation:'Kui Eliisabet kuulis Maarja tervitust, hüppas laps tema ihus. Eliisabet sai täis Püha Vaimu.'
+  }
 },
 {
-ref:'Матфея 1:18–25',bible:'Matthew 1:18-25',
-ru:{title:'Сон, изменивший решение',story:'Мария была обручена с Иосифом. Когда выяснилось, что она ожидает ребёнка от Святого Духа, Иосиф оказался перед трудным решением. Он был праведным человеком и не хотел опозорить Марию, поэтому решил тайно отпустить её.\\n\\nНо когда он обдумывал это, ему во сне явился ангел Господень. Ангел сказал: «Иосиф, сын Давидов! не бойся принять Марию, жену твою, ибо родившееся в Ней есть от Духа Святого».\\n\\nАнгел также объяснил, что Мария родит Сына, и Иосиф должен назвать Его Иисусом, потому что Он спасёт людей от их грехов. Проснувшись, Иосиф поступил так, как велел ему ангел, и принял Марию.',q:'Что ангел объяснил Иосифу во сне?',a:['Что Мария должна уехать одна','Что ребёнок зачат от Святого Духа и Его нужно назвать Иисусом','Что Иосиф должен покинуть Назарет навсегда'],correct:1,hint:'Ангел призвал Иосифа не бояться принять Марию.',explain:'Иосифу было открыто, что ребёнок от Святого Духа и что Он спасёт людей от грехов. Иосиф послушался Бога.'},
-et:{title:'Unenägu, mis muutis otsust',story:'Maarja oli kihlatud Joosepiga. Kui selgus, et ta ootab last Pühast Vaimust, seisis Joosep raske otsuse ees. Ta oli õiglane ega tahtnud Maarjat häbistada ning kavatses ta salaja vabaks lasta.\\n\\nKui ta seda mõtles, ilmus talle unes Issanda ingel. Ingel ütles: „Joosep, Taaveti poeg, ära karda Maarjat, oma naist, enese juurde võtta, sest see, kes temas on sündinud, on Pühast Vaimust.”\\n\\nIngel ütles ka, et Maarja sünnitab Poja ja Joosep peab panema Talle nimeks Jeesus, sest Tema päästab oma rahva nende pattudest. Joosep tegi nii, nagu ingel oli käskinud.',q:'Mida ingel Joosepile unes selgitas?',a:['Maarja peab üksi ära minema','Laps on saadud Pühast Vaimust ja Tema nimeks tuleb panna Jeesus','Joosep peab Naatsaretist igaveseks lahkuma'],correct:1,hint:'Ingel julgustas Joosepit Maarjat enda juurde võtma.',explain:'Joosepile öeldi, et laps on Pühast Vaimust ja päästab inimesed nende pattudest.'}
+  ref:'Матфея 1:18–25', bible:'Matthew 1:18-25', correct:1,
+  ru:{
+    title:'Сон, изменивший решение',
+    story:`Мария была обручена с Иосифом. Но прежде чем они стали жить вместе, выяснилось, что Мария ожидает ребёнка от Святого Духа.
+
+Иосиф был праведным человеком. Он не хотел опозорить Марию и решил тайно отпустить её. Он ещё не понимал, что именно происходит.
+
+Но когда он обдумывал это, ему во сне явился ангел Господень. Ангел сказал: «Иосиф, сын Давидов! не бойся принять Марию, жену твою, ибо родившееся в Ней есть от Духа Святаго».
+
+Ангел также сказал, что Мария родит Сына и Иосиф должен назвать Его Иисусом, потому что Он спасёт людей от их грехов.
+
+Проснувшись, Иосиф поступил так, как повелел ему ангел. Он принял Марию и не оставил её.
+
+Иногда довериться Богу означает изменить свои планы. Иосиф не знал всего, что ждёт его впереди, но послушался Божьего слова.`,
+    question:'Что сказал ангел Иосифу во сне?',
+    options:['Немедленно покинуть город.','Не бояться принять Марию, потому что ребёнок от Святого Духа.','Назвать ребёнка Иоанном.'],
+    hint:'Ангел объяснил Иосифу, откуда появился ребёнок.',
+    explanation:'Ангел сказал Иосифу не бояться принять Марию, потому что зачатое в ней — от Святого Духа.'
+  },
+  et:{
+    title:'Unenägu, mis muutis otsust',
+    story:`Maarja oli kihlatud Joosepiga. Enne kui nad hakkasid koos elama, selgus aga, et Maarja ootab last Pühast Vaimust.
+
+Joosep oli õiglane mees. Ta ei tahtnud Maarjat häbistada ja otsustas ta salaja minema saata. Ta ei mõistnud veel, mis tegelikult toimub.
+
+Kui ta seda mõtles, ilmus talle unes Issanda ingel. Ingel ütles: „Joosep, Taaveti poeg, ära karda Maarjat, oma naist, enese juurde võtta, sest laps, keda ta kannab, on Pühast Vaimust.”
+
+Ingel ütles ka, et Maarja sünnitab Poja ja Joosep peab panema talle nimeks Jeesus, sest Tema päästab oma rahva nende pattudest.
+
+Ärgates tegi Joosep nii, nagu Issanda ingel oli teda käskinud. Ta võttis Maarja enda juurde ega jätnud teda maha.
+
+Mõnikord tähendab Jumala usaldamine oma plaanide muutmist. Joosep ei teadnud kõike, mis teda ees ootas, kuid ta kuuletus Jumala sõnale.`,
+    question:'Mida ütles ingel Joosepile unes?',
+    options:['Lahku kohe linnast.','Ära karda Maarjat enda juurde võtta, sest laps on Pühast Vaimust.','Pane lapsele nimeks Johannes.'],
+    hint:'Ingel selgitas Joosepile, kust laps oli tulnud.',
+    explanation:'Ingel ütles Joosepile, et ta ei kardaks Maarjat enda juurde võtta, sest laps oli saadud Pühast Vaimust.'
+  }
 },
 {
-ref:'Луки 2:1–3',bible:'Luke 2:1-3',
-ru:{title:'Путь в Вифлеем',story:'В те дни вышло повеление от кесаря Августа сделать перепись по всей земле. Люди должны были отправиться в города, откуда происходили их семьи, чтобы записаться.\\n\\nЭто повеление изменило планы многих людей. Иосифу тоже пришлось отправиться в путь. Он жил в Назарете Галилейском, но должен был идти туда, откуда происходил его род.\\n\\nТак обычное распоряжение римского правителя стало частью истории, в которой исполнялось Божье обещание. Путь в Вифлеем был не просто путешествием — он приближал рождение Спасителя.',q:'Почему люди отправлялись в свои родные города?',a:['Чтобы праздновать свадьбу','Из-за переписи, объявленной кесарем Августом','Чтобы встретить волхвов'],correct:1,hint:'Правитель приказал пересчитать население.',explain:'Кесарь Август объявил перепись. Поэтому Иосиф отправился в город своего рода.'},
-et:{title:'Teekond Petlemma',story:'Neil päevil andis keiser Augustus käsu kogu riigi rahvas üles kirjutada. Inimesed pidid minema oma päritolulinna, et end kirja panna.\\n\\nSee korraldus muutis paljude inimeste plaane. Ka Joosep pidi teele asuma. Ta elas Galilea Naatsaretis, kuid pidi minema linna, kust tema suguvõsa pärines.\\n\\nNii sai Rooma valitseja korraldus osaks loost, milles täitus Jumala tõotus. Teekond Petlemma viis Päästja sünnile lähemale.',q:'Miks inimesed pidid minema oma kodulinna?',a:['Pulmade tähistamiseks','Keiser Augustuse korraldatud rahvaloenduse tõttu','Tarkade meeste vastuvõtmiseks'],correct:1,hint:'Valitseja käskis rahva üle lugeda.',explain:'Keiser Augustus korraldas rahvaloenduse. Seetõttu läks Joosep oma suguvõsa linna.'}
+  ref:'Луки 2:1–3', bible:'Luke 2:1-3', correct:1,
+  ru:{
+    title:'Путь в Вифлеем',
+    story:`В те дни вышло повеление от кесаря Августа сделать перепись по всей земле. Каждый должен был отправиться в свой город, чтобы записаться.
+
+Это распоряжение изменило планы многих людей. Дороги наполнились путешественниками, которые направлялись в города своих предков.
+
+Иосиф тоже должен был отправиться в путь. Ему предстояло идти из Назарета в Вифлеем — город, откуда происходил его род.
+
+Мария отправилась вместе с ним. Это было непростое путешествие: дорога была длинной, а время рождения ребёнка уже приближалось.
+
+Но даже через решения земных правителей Бог продолжал исполнять Свой план. Путь в Вифлеем стал частью истории рождения Иисуса.`,
+    question:'Почему Иосиф и Мария отправились в путь?',
+    options:['Они хотели навестить пастухов.','Из-за переписи, объявленной кесарем Августом.','Они искали новый дом.'],
+    hint:'Причина была связана с распоряжением римского правителя.',
+    explanation:'Кесарь Август объявил перепись. Поэтому люди должны были отправляться в свои города, чтобы записаться.'
+  },
+  et:{
+    title:'Teekond Petlemma',
+    story:`Neil päevil andis keiser Augustus käsu kogu riik rahvaloendusega kirja panna. Igaüks pidi minema oma linna, et end registreerida.
+
+See korraldus muutis paljude inimeste plaane. Teed täitusid ränduritega, kes suundusid oma esivanemate linnadesse.
+
+Ka Joosep pidi teele asuma. Tal tuli minna Naatsaretist Petlemma — linna, kust tema suguvõsa pärines.
+
+Maarja läks koos temaga. See ei olnud kerge teekond: tee oli pikk ja lapse sündimise aeg oli juba lähedal.
+
+Kuid isegi maiste valitsejate otsuste kaudu viis Jumal oma plaani edasi. Teekond Petlemma sai osaks Jeesuse sünniloost.`,
+    question:'Miks Joosep ja Maarja teele asusid?',
+    options:['Nad tahtsid karjaseid külastada.','Keiser Augustuse korraldatud rahvaloenduse tõttu.','Nad otsisid uut kodu.'],
+    hint:'Põhjus oli seotud Rooma valitseja korraldusega.',
+    explanation:'Keiser Augustus kuulutas välja rahvaloenduse. Seetõttu pidid inimesed minema oma kodulinna end kirja panema.'
+  }
 },
 {
-ref:'Луки 2:4–5',bible:'Luke 2:4-5',
-ru:{title:'Город Давида',story:'Иосиф отправился из Назарета в Вифлеем. Он шёл туда, потому что происходил из дома и рода Давида. Вифлеем был городом Давида, поэтому именно туда ему нужно было прийти для переписи.\\n\\nМария отправилась вместе с Иосифом. Она была обручена с ним и ожидала рождения ребёнка. Путь был непростым: им предстояло пройти большое расстояние, а время рождения уже приближалось.\\n\\nВозможно, они уставали и переживали о том, что ждёт их впереди. Но они продолжали путь. Незаметное для окружающих путешествие приближало событие, которое изменит историю мира.',q:'Почему Иосиф направился именно в Вифлеем?',a:['Потому что там жил кесарь Август','Потому что он происходил из рода Давида','Потому что там находился храм'],correct:1,hint:'Вифлеем называли городом Давида.',explain:'Иосиф принадлежал к дому и роду Давида. Поэтому он отправился в Вифлеем.'},
-et:{title:'Taaveti linn',story:'Joosep läks Naatsaretist Petlemma, sest ta pärines Taaveti soost ja kojast. Petlemm oli Taaveti linn ning sinna pidi ta rahvaloenduse jaoks minema.\\n\\nMaarja läks koos Joosepiga. Ta oli temaga kihlatud ja ootas lapse sündi. Tee ei olnud kerge: ees oli pikk teekond ja sünnituse aeg lähenes.\\n\\nNad võisid olla väsinud ja muretseda tuleviku pärast. Kuid nad jätkasid teed. See tagasihoidlik teekond viis sündmuseni, mis muutis maailma ajalugu.',q:'Miks läks Joosep just Petlemma?',a:['Sest seal elas keiser Augustus','Sest ta pärines Taaveti soost','Sest seal asus tempel'],correct:1,hint:'Petlemma nimetati Taaveti linnaks.',explain:'Joosep kuulus Taaveti kotta ja suguvõssa. Seetõttu läks ta Petlemma.'}
+  ref:'Луки 2:4–5', bible:'Luke 2:4-5', correct:1,
+  ru:{
+    title:'Город Давида',
+    story:`Иосиф отправился из Галилеи, из города Назарета, в Иудею, в город Давидов, называемый Вифлеем.
+
+Почему именно туда? Потому что Иосиф происходил из дома и рода Давида. Перепись требовала, чтобы он записался в городе, связанном с его родом.
+
+Мария была обручена с Иосифом и ожидала рождения ребёнка. Она отправилась вместе с ним в этот путь.
+
+Вифлеем был небольшим городом, но его имя было связано с великим царём Давидом. А теперь этот город должен был стать местом ещё более важного события.
+
+Бог исполнял Свои обещания. Спаситель должен был родиться в городе Давида, как и было предсказано через пророков.`,
+    question:'Почему Иосифу нужно было идти именно в Вифлеем?',
+    options:['Потому что там жил ангел Гавриил.','Потому что он происходил из рода Давида.','Потому что там находился римский дворец.'],
+    hint:'Вспомни, к какому роду принадлежал Иосиф.',
+    explanation:'Иосиф был из дома и рода Давида. Поэтому во время переписи он отправился в Вифлеем, город Давида.'
+  },
+  et:{
+    title:'Taaveti linn',
+    story:`Joosep läks Galileast, Naatsareti linnast, Juudamaale, Taaveti linna, mida hüütakse Petlemmaks.
+
+Miks just sinna? Sest Joosep pärines Taaveti soost ja kojast. Rahvaloenduse tõttu pidi ta end registreerima oma suguvõsaga seotud linnas.
+
+Maarja oli Joosepiga kihlatud ja ootas lapse sündi. Ta läks koos Joosepiga sellele teekonnale.
+
+Petlemm oli väike linn, kuid selle nimi oli seotud suure kuninga Taavetiga. Nüüd pidi sellest linnast saama veelgi tähtsama sündmuse paik.
+
+Jumal täitis oma lubadusi. Päästja pidi sündima Taaveti linnas, nagu prohvetid olid ette kuulutanud.`,
+    question:'Miks pidi Joosep minema just Petlemma?',
+    options:['Sest seal elas ingel Gabriel.','Sest ta pärines Taaveti soost.','Sest seal asus Rooma palee.'],
+    hint:'Tuleta meelde, millisest suguvõsast Joosep pärines.',
+    explanation:'Joosep pärines Taaveti kojast ja soost. Seepärast läks ta rahvaloenduse ajal Petlemma, Taaveti linna.'
+  }
 },
 {
-ref:'Луки 2:6–7',bible:'Luke 2:6-7',
-ru:{title:'Место для Царя',story:'Когда Иосиф и Мария находились в Вифлееме, наступило время родить Марии. Она родила Сына своего первенца, спеленала Его и положила в ясли.\\n\\nПочему в ясли? Потому что для них не нашлось места в гостинице — в доме для приезжих не было свободного места. Так Тот, Кто является Царём царей, пришёл в мир не во дворце и не среди роскоши. Его первой постелью стали ясли для животных.\\n\\nЭто удивительная часть Рождества. Бог пришёл к людям скромно и близко. Иисус родился не в богатстве, а в простоте. Его приход показывает, что Божья любовь доступна каждому человеку.',q:'Куда Мария положила новорождённого Иисуса?',a:['В царскую кроватку','В ясли, потому что не нашлось места в гостинице','На мягкий трон'],correct:1,hint:'Это было место, где обычно лежал корм для животных.',explain:'Мария спеленала Иисуса и положила Его в ясли, потому что в гостинице не было места.'},
-et:{title:'Koht Kuningale',story:'Kui Joosep ja Maarja olid Petlemmas, saabus Maarja sünnitamise aeg. Ta tõi ilmale oma esimese Poja, mähkis Ta mähkmetesse ja asetas sõime.\\n\\nMiks sõime? Sest nende jaoks ei olnud majas ruumi — külaliste tuba oli täis. Nii tuli kuningate Kuningas maailma mitte palees ega luksuses. Tema esimeseks voodiks oli loomade söögisõim.\\n\\nSee on jõululoo hämmastav osa. Jumal tuli inimeste juurde alandlikult ja lähedale. Jeesus sündis lihtsuses, näidates, et Jumala armastus on iga inimese jaoks.',q:'Kuhu Maarja vastsündinud Jeesuse asetas?',a:['Kuninga hälli','Sõime, sest majas ei olnud ruumi','Pehmele troonile'],correct:1,hint:'See oli koht, kuhu pandi loomade toit.',explain:'Maarja mähkis Jeesuse ja asetas Ta sõime, sest majas ei olnud neile ruumi.'}
+  ref:'Луки 2:6–7', bible:'Luke 2:6-7', correct:2,
+  ru:{
+    title:'Место для Царя',
+    story:`Когда Иосиф и Мария были в Вифлееме, наступило время родить Марии.
+
+Она родила Сына своего первенца, спеленала Его и положила в ясли, потому что не было им места в гостинице.
+
+Подумай об этом: Тот, Кого Писание называет Царём царей, пришёл в мир не во дворце и не среди роскоши. Его первой кроваткой стали ясли — место, куда клали корм для животных.
+
+Вокруг не было царских украшений, дорогих тканей или слуг. Рождение Иисуса произошло скромно и просто.
+
+Но именно этот Младенец был обещан Богом. Его приход изменил историю человечества.
+
+Рождество напоминает нам: Божья любовь не измеряется богатством и внешним величием. Самое великое может прийти в мир очень тихо и скромно.`,
+    question:'Куда Мария положила новорождённого Иисуса?',
+    options:['В царскую колыбель.','На мягкую кровать в гостинице.','В ясли, потому что не было места в гостинице.'],
+    hint:'Это место обычно предназначалось для корма животных.',
+    explanation:'Мария спеленала Иисуса и положила Его в ясли, потому что для них не нашлось места в гостинице.'
+  },
+  et:{
+    title:'Paik Kuningale',
+    story:`Kui Joosep ja Maarja olid Petlemmas, saabus Maarja sünnitamise aeg.
+
+Ta tõi ilmale oma esmasündinud Poja, mähkis Ta mähkmetesse ja pani sõime, sest nende jaoks ei olnud majas ruumi.
+
+Mõtle sellele: Tema, keda Pühakiri nimetab kuningate Kuningaks, ei tulnud maailma palees ega luksuses. Tema esimeseks voodiks sai sõim — koht, kuhu pandi loomade toit.
+
+Ümberringi ei olnud kuninglikke kaunistusi, kalleid kangaid ega teenreid. Jeesuse sünd toimus vaikselt ja lihtsalt.
+
+Kuid just see Laps oli Jumala poolt tõotatud. Tema tulek muutis inimkonna ajalugu.
+
+Jõulud tuletavad meile meelde: Jumala armastust ei mõõdeta rikkuse ega välise hiilgusega. Kõige suurem võib tulla maailma väga vaikselt ja tagasihoidlikult.`,
+    question:'Kuhu asetas Maarja vastsündinud Jeesuse?',
+    options:['Kuninglikku hälli.','Pehmesse voodisse võõrastemajas.','Sõime, sest majas ei olnud neile ruumi.'],
+    hint:'See koht oli tavaliselt mõeldud loomade toidu jaoks.',
+    explanation:'Maarja mähkis Jeesuse mähkmetesse ja pani Ta sõime, sest majas ei olnud neile ruumi.'
+  }
 },
 {
-ref:'Луки 2:8–12',bible:'Luke 2:8-12',
-ru:{title:'Знак для пастухов',story:'Недалеко от Вифлеема в поле были пастухи. Они ночью стерегли своё стадо. Вдруг перед ними предстал ангел Господень, и слава Господня осияла их. Пастухи очень испугались.\\n\\nНо ангел сказал им не бояться, потому что возвещает им великую радость для всего народа: сегодня в городе Давидовом родился Спаситель, Который есть Христос Господь.\\n\\nАнгел дал им знак, по которому они смогут узнать Младенца: они найдут Младенца в пеленах, лежащего в яслях. Это было удивительное известие. Первыми о рождении Спасителя услышали не цари и не богатые люди, а простые пастухи.',q:'Какой знак ангел дал пастухам?',a:['Младенец в царском дворце','Младенец в пеленах, лежащий в яслях','Яркая звезда над храмом'],correct:1,hint:'Вспомни, где Мария положила Иисуса.',explain:'Пастухи должны были найти Младенца в пеленах, лежащего в яслях.'},
-et:{title:'Märk karjastele',story:'Petlemma lähedal olid karjased väljal oma karja valvamas. Öösel ilmus neile Issanda ingel ja Issanda kirkus säras nende ümber. Karjased ehmusid väga.\\n\\nIngel ütles, et nad ei kardaks, sest tal on neile suur rõõmusõnum: Taaveti linnas on täna sündinud Päästja, kes on Issand Kristus.\\n\\nIngel andis neile märgi: nad leiavad lapse mähkmetesse mähituna ja sõimes lamamas. See oli hämmastav uudis. Esimestena kuulsid Päästja sünnist mitte kuningad ega rikkad, vaid lihtsad karjased.',q:'Millise märgi ingel karjastele andis?',a:['Laps kuningapalees','Mähkmetesse mähitud laps sõimes','Särav täht templi kohal'],correct:1,hint:'Mõtle, kuhu Maarja Jeesuse asetas.',explain:'Karjased pidid leidma mähkmetesse mähitud lapse sõimest.'}
+  ref:'Луки 2:8–12', bible:'Luke 2:8-12', correct:1,
+  ru:{
+    title:'Знак для пастухов',
+    story:`В той стране были на поле пастухи, которые содержали ночную стражу у своего стада.
+
+Вдруг им явился ангел Господень, и слава Господня осияла их. Пастухи очень испугались.
+
+Но ангел сказал им: «Не бойтесь; я возвещаю вам великую радость, которая будет всем людям».
+
+Он сообщил, что сегодня в городе Давидовом родился Спаситель, Который есть Христос Господь.
+
+А затем ангел дал им знак, по которому они смогут узнать Младенца: они найдут Младенца в пеленах, лежащего в яслях.
+
+Бог не сообщил эту новость сначала богатым и влиятельным людям. Первыми её услышали простые пастухи, которые ночью охраняли стадо.
+
+Весть о рождении Спасителя была радостью для всех людей, а не только для избранных или богатых.`,
+    question:'Какой знак ангел дал пастухам?',
+    options:['Они увидят большую корону.','Они найдут Младенца в пеленах, лежащего в яслях.','Они услышат звук трубы в храме.'],
+    hint:'Вспомни, где лежал новорождённый Иисус.',
+    explanation:'Ангел сказал, что знаком будет Младенец, спелёнатый и лежащий в яслях.'
+  },
+  et:{
+    title:'Märk karjastele',
+    story:`Seal maal olid karjased, kes viibisid öösel väljal ja valvasid oma karja.
+
+Äkitselt seisis nende juures Issanda ingel ja Issanda kirkus säras nende ümber. Karjased ehmusid väga.
+
+Kuid ingel ütles neile: „Ärge kartke! Sest vaata, ma kuulutan teile suurt rõõmu, mis saab osaks kogu rahvale.”
+
+Ta teatas, et Taaveti linnas on täna sündinud Päästja, kes on Issand Kristus.
+
+Seejärel andis ingel neile märgi, mille järgi nad saavad Lapse ära tunda: nad leiavad mähkmetesse mähitud Lapse sõimest.
+
+Jumal ei teatanud seda uudist kõigepealt rikastele ja mõjukatele inimestele. Esimesena kuulsid seda lihtsad karjased, kes öösel oma karja valvasid.
+
+Sõnum Päästja sünnist oli rõõmuks kõigile inimestele, mitte ainult väljavalitutele või rikastele.`,
+    question:'Millise märgi andis ingel karjastele?',
+    options:['Nad näevad suurt krooni.','Nad leiavad mähkmetesse mähitud Lapse sõimest.','Nad kuulevad templis pasunahäält.'],
+    hint:'Tuleta meelde, kus vastsündinud Jeesus lebas.',
+    explanation:'Ingel ütles, et märgiks on mähkmetesse mähitud Laps, kes lamab sõimes.'
+  }
 },
 {
-ref:'Луки 2:13–14',bible:'Luke 2:13-14',
-ru:{title:'Небесная песня',story:'После слов ангела вдруг явилось многочисленное небесное воинство. Ангелы славили Бога и провозглашали: «Слава в вышних Богу, и на земле мир, в человеках благоволение!»\\n\\nПредставь эту ночь: тёмное поле, пастухи, стадо и вдруг небо, наполненное славой и песней. Рождение Иисуса стало причиной радости не только на земле, но и на небесах.\\n\\nАнгелы прославляли Бога за то, что Он послал Спасителя. Рождество напоминает нам о Божьем мире и Его благоволении к людям.',q:'Что прославляли ангелы?',a:['Славу Богу и мир на земле','Силу римского императора','Богатство Вифлеема'],correct:0,hint:'Их песнь начиналась словами «Слава в вышних Богу».',explain:'Ангелы славили Бога и возвещали мир на земле.'},
-et:{title:'Taevane laul',story:'Pärast ingli sõnu ilmus äkitselt suur taevane väehulk. Inglid kiitsid Jumalat ja kuulutasid: „Au olgu Jumalale kõrges ja maa peal rahu!”\\n\\nKujuta ette seda ööd: pime väli, karjased ja kari ning äkitselt kirkusest täidetud taevas ja laul. Jeesuse sünd tõi rõõmu nii maa peale kui taevasse.\\n\\nInglid kiitsid Jumalat, sest Ta oli saatnud Päästja. Jõulud meenutavad meile Jumala rahu ja head tahet inimeste vastu.',q:'Mida inglid ülistasid?',a:['Jumala au ja rahu maa peal','Rooma keisri väge','Petlemma rikkust'],correct:0,hint:'Nende laul algas sõnadega „Au olgu Jumalale kõrges”.',explain:'Inglid kiitsid Jumalat ja kuulutasid rahu maa peale.'}
+  ref:'Луки 2:13–14', bible:'Luke 2:13-14', correct:0,
+  ru:{
+    title:'Небесная песня',
+    story:`После того как ангел сообщил пастухам радостную весть, внезапно явилось многочисленное небесное воинство, славящее Бога.
+
+Они говорили: «Слава в вышних Богу, и на земле мир, в человеках благоволение!»
+
+Представь эту картину: ночное небо, испуганные пастухи, ангелы и песня, которая прославляет Бога.
+
+Рождение Иисуса было не просто семейным событием в маленьком городе. Небо радовалось тому, что Бог исполняет Своё обещание и посылает Спасителя.
+
+Ангелы прославляли Бога за Его любовь и мир, который Он предлагает людям через Иисуса.
+
+Эта песня напоминает нам, что Рождество — время прославить Бога и задуматься о мире, который начинается с Него.`,
+    question:'Что прославляло небесное воинство?',
+    options:['Славу Богу и мир на земле.','Победу римского императора.','Богатство и силу Вифлеема.'],
+    hint:'Вспомни первые слова небесной песни: «Слава в вышних…»',
+    explanation:'Небесное воинство прославляло Бога и возвещало мир на земле. Рождение Иисуса стало вестью великой радости.'
+  },
+  et:{
+    title:'Taevane laul',
+    story:`Pärast seda, kui ingel oli karjastele rõõmusõnumi kuulutanud, ilmus äkitselt suur taevane väehulk, kes kiitis Jumalat.
+
+Nad ütlesid: „Au olgu Jumalale kõrges ja maa peal rahu, inimestest hea meel!”
+
+Kujuta ette seda pilti: öine taevas, ehmunud karjased, inglid ja laul, mis ülistab Jumalat.
+
+Jeesuse sünd ei olnud lihtsalt perekondlik sündmus väikeses linnas. Taevas rõõmustas selle üle, et Jumal täitis oma lubaduse ja saatis Päästja.
+
+Inglid ülistasid Jumalat Tema armastuse ja rahu eest, mida Ta pakub inimestele Jeesuse kaudu.
+
+See laul tuletab meile meelde, et jõulud on aeg Jumalat ülistada ja mõelda rahule, mis algab Temast.`,
+    question:'Mida taevane väehulk ülistas?',
+    options:['Jumala au ja rahu maa peal.','Rooma keisri võitu.','Petlemma rikkust ja vägevust.'],
+    hint:'Tuleta meelde taevase laulu esimesi sõnu: „Au olgu Jumalale kõrges...”',
+    explanation:'Taevane väehulk ülistas Jumalat ja kuulutas rahu maa peal. Jeesuse sünd tõi suure rõõmusõnumi.'
+  }
 },
 {
-ref:'Луки 2:15–20',bible:'Luke 2:15-20',
-ru:{title:'Они не остались на месте',story:'Когда ангелы ушли на небо, пастухи сказали друг другу: пойдём в Вифлеем и посмотрим, что там произошло и о чём возвестил нам Господь.\\n\\nОни поспешили и нашли Марию, Иосифа и Младенца, лежащего в яслях. Увидев Его, пастухи рассказали всё, что им было сказано о Ребёнке. Все, кто слышал их рассказ, удивлялись.\\n\\nМария сохраняла эти слова в своём сердце. Пастухи же вернулись, прославляя и хваля Бога за всё, что услышали и увидели. Они не оставили услышанную весть только для себя — они поделились ею с другими.',q:'Что сделали пастухи после вести ангелов?',a:['Остались на поле и забыли о ней','Поспешили в Вифлеем и нашли Младенца','Вернулись домой, не проверив'],correct:1,hint:'Они решили своими глазами увидеть то, о чём им сообщили.',explain:'Пастухи отправились в Вифлеем, нашли Иисуса и рассказали другим о случившемся.'},
-et:{title:'Nad ei jäänud paigale',story:'Kui inglid olid taevasse läinud, ütlesid karjased üksteisele: lähme Petlemma ja vaatame, mis seal on sündinud ning millest Issand meile teada andis.\\n\\nNad läksid kiiresti ja leidsid Maarja, Joosepi ja sõimes lamava lapse. Kui nad Teda nägid, rääkisid nad sellest, mida neile lapse kohta oli öeldud. Kõik kuulajad imestasid.\\n\\nMaarja jättis need sõnad oma südamesse. Karjased pöördusid tagasi, ülistades ja kiites Jumalat kõige eest, mida nad olid kuulnud ja näinud. Nad jagasid head sõnumit teistega.',q:'Mida karjased pärast inglite sõnumit tegid?',a:['Jäid väljale ega mõelnud sellele enam','Läksid kiiresti Petlemma ja leidsid lapse','Läksid koju ega kontrollinud midagi'],correct:1,hint:'Nad tahtsid oma silmaga näha, millest neile räägiti.',explain:'Karjased läksid Petlemma, leidsid Jeesuse ja rääkisid teistele sellest.'}
+  ref:'Луки 2:15–20', bible:'Luke 2:15-20', correct:1,
+  ru:{
+    title:'Они не остались на месте',
+    story:`Когда ангелы отошли от пастухов на небо, пастухи сказали друг другу: «Пойдём в Вифлеем и посмотрим, что там случилось, о чём возвестил нам Господь».
+
+Они не стали просто обсуждать услышанное и возвращаться к привычным делам. Пастухи решили отправиться и увидеть всё своими глазами.
+
+Они поспешили и нашли Марию, Иосифа и Младенца, лежащего в яслях. Увидев Его, они рассказали о том, что им было возвещено об этом Младенце.
+
+Все, кто слышал рассказ пастухов, удивлялись. А Мария сохраняла все эти слова, размышляя о них в своём сердце.
+
+Пастухи возвратились, прославляя и хваля Бога за всё, что услышали и увидели.
+
+Они не остались на месте. Услышав Божью весть, они пошли и встретили Иисуса. А потом поделились радостью с другими.`,
+    question:'Что сделали пастухи после вести ангелов?',
+    options:['Остались охранять стадо и ничего не предприняли.','Поспешили в Вифлеем и нашли Младенца.','Отправились искать царский дворец.'],
+    hint:'Они захотели своими глазами увидеть то, о чём им сказал ангел.',
+    explanation:'Пастухи поспешили в Вифлеем, нашли Марию, Иосифа и Младенца, а затем рассказали другим услышанное.'
+  },
+  et:{
+    title:'Nad ei jäänud paigale',
+    story:`Kui inglid olid karjaste juurest taevasse läinud, ütlesid karjased üksteisele: „Läki nüüd Petlemma ja vaadakem, mis seal on sündinud, millest Issand meile teada andis!”
+
+Nad ei jäänud lihtsalt kuuldut arutama ega pöördunud tagasi oma tavaliste tegemiste juurde. Karjased otsustasid minna ja kõike oma silmaga näha.
+
+Nad läksid rutates ning leidsid Maarja, Joosepi ja sõimes lebava Lapse. Teda nähes jutustasid nad, mida neile selle Lapse kohta oli öeldud.
+
+Kõik, kes karjaste juttu kuulsid, imestasid. Maarja aga jättis kõik need sõnad meelde ja mõtles nende üle oma südames.
+
+Karjased pöördusid tagasi, ülistades ja kiites Jumalat kõige eest, mida nad olid kuulnud ja näinud.
+
+Nad ei jäänud paigale. Kuulnud Jumala sõnumit, läksid nad Jeesusega kohtuma. Seejärel jagasid nad rõõmu ka teistega.`,
+    question:'Mida karjased pärast inglite sõnumit tegid?',
+    options:['Jäid karja valvama ega teinud midagi.','Läksid rutates Petlemma ja leidsid Lapse.','Hakkasid otsima kuningapaleed.'],
+    hint:'Nad tahtsid oma silmaga näha seda, millest ingel rääkis.',
+    explanation:'Karjased läksid rutates Petlemma, leidsid Maarja, Joosepi ja Lapse ning rääkisid teistele kuuldust.'
+  }
 },
 {
-ref:'Матфея 2:1–2',bible:'Matthew 2:1-2',
-ru:{title:'Звезда на Востоке',story:'После рождения Иисуса в Вифлееме Иудейском во дни царя Ирода пришли в Иерусалим волхвы с востока. Они были мудрецами, которые наблюдали за небом и искали знаки.\\n\\nВолхвы спрашивали: где родившийся Царь Иудейский? Они увидели Его звезду на востоке и пришли поклониться Ему.\\n\\nЗвезда привела их в путь. Они не знали всех подробностей, но увиденный знак побудил их отправиться искать Царя. Рождественская история показывает, что Иисус пришёл не только для одного народа — к Нему стремились люди из далёких стран.',q:'Откуда пришли волхвы, чтобы поклониться Иисусу?',a:['С востока','Из Египта','Из Рима'],correct:0,hint:'В Евангелии говорится, что они увидели Его звезду на востоке.',explain:'Волхвы пришли с востока, увидев звезду родившегося Царя.'},
-et:{title:'Täht idas',story:'Kui Jeesus oli sündinud Juudamaa Petlemmas kuningas Heroodese ajal, tulid idamaalt tähetargad Jeruusalemma. Nad olid targad mehed, kes jälgisid taevast ja otsisid märke.\\n\\nNad küsisid: kus on vastsündinud juutide kuningas? Nad olid näinud Tema tähte idas ja tulnud Teda kummardama.\\n\\nTäht pani nad teele. Nad ei teadnud kõiki üksikasju, kuid nähtud märk ajendas neid Kuningat otsima. Jeesus ei tulnud ainult ühe rahva jaoks — Tema juurde tulid inimesed ka kaugelt.',q:'Kust tulid tähetargad Jeesust kummardama?',a:['Idast','Egiptusest','Roomast'],correct:0,hint:'Evangeelium ütleb, et nad nägid Tema tähte idas.',explain:'Tähetargad tulid idast, sest olid näinud sündinud Kuninga tähte.'}
+  ref:'Матфея 2:1–2', bible:'Matthew 2:1-2', correct:0,
+  ru:{
+    title:'Звезда на Востоке',
+    story:`Когда Иисус родился в Вифлееме Иудейском, во дни царя Ирода, в Иерусалим пришли волхвы с востока.
+
+Они были мудрецами, которые наблюдали за небом и искали смысл происходящего. Увидев необычную звезду, они поняли, что родился Царь Иудейский.
+
+Волхвы отправились в путь, чтобы поклониться Ему. Они не знали всех подробностей, но были готовы преодолеть большое расстояние ради встречи с Ним.
+
+Звезда стала для них знаком и указателем пути. Они не просто любовались её красотой — они последовали за ней.
+
+Эта история напоминает нам, что важно не только заметить Божий знак, но и сделать шаг навстречу тому, к Кому он ведёт.`,
+    question:'Откуда пришли волхвы, увидевшие звезду?',
+    options:['С востока.','Из Египта.','Из Рима.'],
+    hint:'В Евангелии от Матфея прямо сказано, с какой стороны они прибыли.',
+    explanation:'Волхвы пришли с востока в Иерусалим, потому что увидели звезду родившегося Царя.'
+  },
+  et:{
+    title:'Täht idamaal',
+    story:`Kui Jeesus oli sündinud Juudamaa Petlemmas kuningas Heroodese päevil, tulid Jeruusalemma tähetargad idamaalt.
+
+Nad olid targad mehed, kes jälgisid taevast ja otsisid toimuvast tähendust. Nähes erilist tähte, mõistsid nad, et on sündinud juutide Kuningas.
+
+Tähetargad asusid teele, et Teda kummardada. Nad ei teadnud kõiki üksikasju, kuid olid valmis läbima pika tee, et Temaga kohtuda.
+
+Tähest sai neile märk ja teejuhataja. Nad ei imetlenud lihtsalt selle ilu — nad järgnesid sellele.
+
+See lugu tuletab meile meelde, et tähtis pole ainult Jumala märki märgata, vaid ka astuda samm Tema poole, kelle juurde see juhatab.`,
+    question:'Kust tulid tähetargad, kes tähte nägid?',
+    options:['Idamaalt.','Egiptusest.','Roomast.'],
+    hint:'Matteuse evangeelium ütleb otse, millisest suunast nad saabusid.',
+    explanation:'Tähetargad tulid idamaalt Jeruusalemma, sest nad nägid sündinud Kuninga tähte.'
+  }
 },
 {
-ref:'Матфея 2:3–8',bible:'Matthew 2:3-8',
-ru:{title:'Вопрос царя',story:'Когда царь Ирод услышал о рождении Царя Иудейского, он встревожился, и весь Иерусалим вместе с ним. Ирод собрал первосвященников и книжников и спросил, где должен родиться Христос.\\n\\nОни ответили, что в Вифлееме, потому что так было написано пророком: из Вифлеема выйдет Вождь, Который будет пасти народ Божий.\\n\\nИрод тайно позвал волхвов и расспросил их о времени появления звезды. Затем он отправил их в Вифлеем и попросил внимательно разузнать о Младенце, а потом сообщить ему. Но намерения Ирода не были добрыми: он боялся потерять власть.',q:'Где, согласно пророчеству, должен был родиться Христос?',a:['В Назарете','В Иерусалиме','В Вифлееме'],correct:2,hint:'Это город, куда направлялись Иосиф и Мария.',explain:'Книжники указали на Вифлеем, ссылаясь на пророчество.'},
-et:{title:'Kuninga küsimus',story:'Kui kuningas Heroodes kuulis juutide Kuninga sünnist, ehmus ta ja kogu Jeruusalemm koos temaga. Heroodes kogus ülempreestrid ja kirjatundjad ning küsis, kus Messias peab sündima.\\n\\nNad vastasid, et Petlemmas, sest prohvet oli kirjutanud, et sealt tuleb Valitseja, kes hoiab Jumala rahvast.\\n\\nHeroodes kutsus tähetargad salaja enda juurde ja uuris tähe ilmumise aega. Seejärel saatis ta nad Petlemma ning palus lapsest teada anda. Heroodese kavatsused ei olnud head — ta kartis oma võimu kaotada.',q:'Kus pidi prohvetikuulutuse järgi Kristus sündima?',a:['Naatsaretis','Jeruusalemmas','Petlemmas'],correct:2,hint:'See on linn, kuhu Joosep ja Maarja läksid.',explain:'Kirjatundjad nimetasid Petlemma ja viitasid prohvetikuulutusele.'}
+  ref:'Матфея 2:3–8', bible:'Matthew 2:3-8', correct:2,
+  ru:{
+    title:'Вопрос царя',
+    story:`Когда царь Ирод услышал о рождении Царя Иудейского, он встревожился, и вместе с ним весь Иерусалим.
+
+Ирод созвал первосвященников и книжников народа и спросил, где должен родиться Христос. Они ответили, что в Вифлееме Иудейском, потому что так было написано у пророка.
+
+Тогда Ирод тайно призвал волхвов и выведал у них время появления звезды. Затем он отправил их в Вифлеем, попросив тщательно разузнать о Младенце и сообщить ему, чтобы он тоже мог поклониться Ему.
+
+Но слова Ирода не отражали настоящего желания поклониться. Он боялся потерять свою власть.
+
+Одна и та же новость вызвала разные реакции: волхвы искали Иисуса, чтобы поклониться Ему, а Ирод видел в Нём угрозу.
+
+История напоминает нам, что можно знать правильные слова о Боге, но при этом не желать следовать за Ним.`,
+    question:'В каком городе, согласно словам пророка, должен был родиться Христос?',
+    options:['В Назарете.','В Иерусалиме.','В Вифлееме.'],
+    hint:'Вспомни город, куда направлялись Иосиф и Мария перед рождением Иисуса.',
+    explanation:'Книжники указали на Вифлеем Иудейский. Именно там, согласно пророчеству, должен был родиться Христос.'
+  },
+  et:{
+    title:'Kuninga küsimus',
+    story:`Kui kuningas Heroodes kuulis juutide Kuninga sünnist, ehmus ta ning koos temaga kogu Jeruusalemm.
+
+Heroodes kutsus kokku ülempreestrid ja rahva kirjatundjad ning küsis, kus Kristus peab sündima. Nad vastasid, et Juudamaa Petlemmas, sest nii oli prohveti kaudu kirjutatud.
+
+Seejärel kutsus Heroodes tähetargad salaja enda juurde ja uuris neilt tähe ilmumise aega. Ta saatis nad Petlemma ning palus neil Lapse kohta täpselt järele uurida ja talle teada anda, et ka tema saaks Teda kummardada.
+
+Kuid Heroodese sõnad ei väljendanud tõelist soovi kummardada. Ta kartis oma võimu kaotada.
+
+Üks ja sama uudis tekitas erinevaid reaktsioone: tähetargad otsisid Jeesust, et Teda kummardada, Heroodes aga nägi Temas ohtu.
+
+See lugu tuletab meile meelde, et inimene võib teada õigeid sõnu Jumala kohta, kuid siiski mitte soovida Talle järgneda.`,
+    question:'Millises linnas pidi prohveti sõnade järgi Kristus sündima?',
+    options:['Naatsaretis.','Jeruusalemmas.','Petlemmas.'],
+    hint:'Mõtle linnale, kuhu Joosep ja Maarja enne Jeesuse sündi läksid.',
+    explanation:'Kirjatundjad nimetasid Juudamaa Petlemma. Prohvetikuulutuse järgi pidi Kristus sündima just seal.'
+  }
 },
 {
-ref:'Матфея 2:9–11',bible:'Matthew 2:9-11',
-ru:{title:'Самый необычный подарок',story:'Выслушав царя, волхвы отправились в путь. Звезда, которую они видели на востоке, шла перед ними и остановилась над местом, где находился Младенец. Увидев звезду, они очень обрадовались.\\n\\nВойдя в дом, волхвы увидели Младенца с Марией, Его матерью, и, пав, поклонились Ему. Затем они открыли свои сокровища и принесли дары: золото, ладан и смирну.\\n\\nЭто были ценные подарки, каждый со своим значением. Но самым важным было не то, что волхвы принесли, а Кому они поклонились. Они признали в Иисусе Царя и пришли почтить Его.',q:'Какие дары принесли волхвы Иисусу?',a:['Серебро, хлеб и вино','Золото, ладан и смирну','Одежду, воду и масло'],correct:1,hint:'Вспомни три известных дара из этой истории.',explain:'Волхвы принесли золото, ладан и смирну, а прежде всего поклонились Иисусу.'},
-et:{title:'Kõige erilisem kingitus',story:'Pärast kuninga kuulamist asusid tähetargad teele. Täht, mida nad olid idas näinud, käis nende eel ja jäi seisma paiga kohale, kus oli laps. Tähe nägemisest rõõmustasid nad väga.\\n\\nMajja astudes nägid nad last koos Maarja, Tema emaga. Nad kummardasid Teda ning avasid oma varandused ja tõid kingitusteks kulda, viirukit ja mürri.\\n\\nNeed olid hinnalised kingitused. Kuid kõige tähtsam ei olnud see, mida nad tõid, vaid see, kelle ette nad kummardasid. Nad tunnistasid Jeesuse Kuningaks.',q:'Millised kingitused tähetargad Jeesusele tõid?',a:['Hõbeda, leiva ja veini','Kulla, viiruki ja mürri','Riided, vee ja õli'],correct:1,hint:'Mõtle selle loo kolmele tuntud kingitusele.',explain:'Tähetargad tõid kulda, viirukit ja mürri ning kummardasid Jeesust.'}
+  ref:'Матфея 2:9–11', bible:'Matthew 2:9-11', correct:1,
+  ru:{
+    title:'Самый необычный подарок',
+    story:`Выслушав царя, волхвы отправились в путь. И звезда, которую они видели на востоке, шла перед ними, пока не остановилась над местом, где находился Младенец.
+
+Увидев звезду, волхвы очень обрадовались. Они вошли в дом, увидели Младенца с Марией, Его матерью, и, пав, поклонились Ему.
+
+Затем они открыли свои сокровища и принесли Ему дары: золото, ладан и смирну.
+
+Это были необычные и ценные подарки. Но ещё важнее было то, что волхвы пришли не просто ради подарков или любопытства. Они пришли поклониться Иисусу.
+
+Их путешествие закончилось встречей с Тем, Кого они искали. Они увидели Младенца и выразили Ему почтение.
+
+Иногда самый ценный дар — это не вещь, а сердце, которое искренне приходит к Богу.`,
+    question:'Какие дары принесли волхвы Иисусу?',
+    options:['Серебро, хлеб и вино.','Золото, ладан и смирну.','Одежду, овец и воду.'],
+    hint:'В Библии перечислены три дара. Один из них — драгоценный металл.',
+    explanation:'Волхвы принесли Иисусу золото, ладан и смирну. Это были ценные дары, которыми они выразили Ему почтение.'
+  },
+  et:{
+    title:'Kõige erilisem kingitus',
+    story:`Kui tähetargad olid kuninga ära kuulanud, asusid nad teele. Täht, mida nad olid idamaal näinud, käis nende eel, kuni jäi seisma selle paiga kohale, kus oli Laps.
+
+Tähte nähes rõõmustasid tähetargad väga. Nad astusid majja, nägid Last koos Maarja, tema emaga, langesid maha ja kummardasid Teda.
+
+Seejärel avasid nad oma varanduse ning andsid Talle kingitusi: kulda, viirukit ja mürri.
+
+Need olid erilised ja väärtuslikud kingitused. Kuid veel tähtsam oli see, et tähetargad ei tulnud ainult kingituste pärast ega uudishimust. Nad tulid Jeesust kummardama.
+
+Nende teekond lõppes kohtumisega Temaga, keda nad olid otsinud. Nad nägid Last ja väljendasid Talle austust.
+
+Mõnikord ei ole kõige väärtuslikum kingitus ese, vaid süda, mis tuleb siiralt Jumala juurde.`,
+    question:'Milliseid kingitusi tõid tähetargad Jeesusele?',
+    options:['Hõbedat, leiba ja veini.','Kulda, viirukit ja mürri.','Riideid, lambaid ja vett.'],
+    hint:'Piiblis on nimetatud kolm kingitust. Üks neist on väärismetall.',
+    explanation:'Tähetargad tõid Jeesusele kulda, viirukit ja mürri. Need olid väärtuslikud kingitused, millega nad väljendasid Talle austust.'
+  }
 },
 {
-ref:'Иоанна 3:16',bible:'John 3:16',
-ru:{title:'Самая большая любовь',story:'Мы прошли путь от древнего обещания до рождения Иисуса, от пастухов до волхвов. Каждая история открывала нам что-то важное. Но зачем Бог сделал всё это?\\n\\nВ Евангелии от Иоанна записаны слова, которые объясняют сердце Рождества: «Ибо так возлюбил Бог мир, что отдал Сына Своего Единородного, дабы всякий верующий в Него, не погиб, но имел жизнь вечную».\\n\\nИисус пришёл в мир не просто как Младенец, о Котором рассказывают красивую историю. Он пришёл, потому что Бог любит людей и желает спасти их. Рождество напоминает нам о величайшем Божьем подарке — Его Сыне.\\n\\nТы нашёл все звёзды. Но самое главное сокровище — узнать Божью любовь и ответить на неё.',q:'Почему Бог послал Своего Сына в мир?',a:['Чтобы люди построили Ему дворец','Чтобы стать земным правителем','Потому что Бог так возлюбил мир и желает спасти людей'],correct:2,hint:'Ответ начинается со слов: «Ибо так возлюбил Бог мир…».',explain:'Бог послал Иисуса из любви к людям, чтобы всякий верующий в Него имел жизнь вечную.'},
-et:{title:'Suurim armastus',story:'Oleme käinud tee iidsest tõotusest Jeesuse sünnini, karjastest tähetarkadeni. Iga lugu on meile midagi olulist näidanud. Aga miks Jumal seda kõike tegi?\\n\\nJohannese evangeeliumis on sõnad, mis selgitavad jõulude südant: „Sest nõnda on Jumal maailma armastanud, et ta oma ainusündinud Poja on andnud, et ükski, kes temasse usub, ei hukkuks, vaid et tal oleks igavene elu.”\\n\\nJeesus ei tulnud maailma lihtsalt ilusa loo väikelapsena. Ta tuli, sest Jumal armastab inimesi ja tahab neid päästa. Jõulud meenutavad meile Jumala suurimat kingitust — Tema Poega.\\n\\nOled leidnud kõik tähed. Kuid kõige suurem aare on Jumala armastuse tundmine ja sellele vastamine.',q:'Miks saatis Jumal oma Poja maailma?',a:['Et inimesed ehitaksid Talle palee','Et saada maiseks valitsejaks','Sest Jumal armastas maailma ja tahab inimesi päästa'],correct:2,hint:'Vastus algab sõnadega: „Sest nõnda on Jumal maailma armastanud…”',explain:'Jumal saatis Jeesuse armastusest inimeste vastu, et uskujatel oleks igavene elu.'}
+  ref:'Иоанна 3:16', bible:'John 3:16', correct:2,
+  ru:{
+    title:'Самая большая любовь',
+    story:`Мы прошли путь от древнего обещания до рождения Иисуса. Мы услышали о Марии и Иосифе, ангелах и пастухах, звезде и волхвах.
+
+Но почему всё это произошло? Почему Иисус пришёл в этот мир?
+
+В Евангелии от Иоанна есть слова, которые объясняют самую главную причину: «Ибо так возлюбил Бог мир, что отдал Сына Своего Единородного, дабы всякий верующий в Него, не погиб, но имел жизнь вечную».
+
+Бог послал Иисуса не потому, что люди были совершенными. Он сделал это из любви. Иисус пришёл, чтобы открыть людям путь к Богу и дать им надежду на вечную жизнь.
+
+Рождество — это не только история о звезде, подарках и праздничных огнях. Это история о Божьей любви, которая пришла к нам в Иисусе Христе.
+
+Ты прошёл все пятнадцать звёзд. Но самое главное сокровище этого путешествия — не найденные звёзды, а истина, которую они открывали: Бог любит тебя и приглашает жить с Ним.`,
+    question:'Почему Бог послал Своего Сына в мир?',
+    options:['Чтобы люди стали богаче.','Чтобы основать земное царство.','Потому что Бог так возлюбил мир и желает дать людям вечную жизнь.'],
+    hint:'Вспомни первые слова Иоанна 3:16: «Ибо так возлюбил Бог мир…»',
+    explanation:'Иоанна 3:16 говорит о Божьей любви: Бог отдал Своего Сына, чтобы верующий в Него имел жизнь вечную. Это главная весть Рождества.'
+  },
+  et:{
+    title:'Kõige suurem armastus',
+    story:`Oleme läbinud teekonna muistsest tõotusest Jeesuse sünnini. Kuulsime Maarjast ja Joosepist, inglitest ja karjastest, tähest ja tähetarkadest.
+
+Aga miks see kõik juhtus? Miks tuli Jeesus siia maailma?
+
+Johannese evangeeliumis on sõnad, mis selgitavad kõige tähtsamat põhjust: „Sest nõnda on Jumal maailma armastanud, et ta oma ainusündinud Poja on andnud, et ükski, kes temasse usub, ei hukkuks, vaid et tal oleks igavene elu.”
+
+Jumal ei saatnud Jeesust sellepärast, et inimesed oleksid olnud täiuslikud. Ta tegi seda armastusest. Jeesus tuli, et avada inimestele tee Jumala juurde ja anda neile lootus igaveseks eluks.
+
+Jõulud ei ole ainult lugu tähest, kingitustest ja pidulikest tuledest. See on lugu Jumala armastusest, mis tuli meie juurde Jeesuses Kristuses.
+
+Sa oled läbinud kõik viisteist tähte. Kuid selle teekonna kõige suurem aare ei ole leitud tähed, vaid tõde, mida need avasid: Jumal armastab sind ja kutsub sind elama koos Temaga.`,
+    question:'Miks saatis Jumal oma Poja maailma?',
+    options:['Et inimesed saaksid rikkamaks.','Et rajada maapealne kuningriik.','Sest Jumal armastas maailma ja tahab anda inimestele igavese elu.'],
+    hint:'Tuleta meelde Johannese 3:16 esimesi sõnu: „Sest nõnda on Jumal maailma armastanud...”',
+    explanation:'Johannese 3:16 räägib Jumala armastusest: Jumal andis oma Poja, et igaühel, kes Temasse usub, oleks igavene elu. See on jõulude kõige tähtsam sõnum.'
+  }
 }
 ];
 
-// ============================================
-// ЯЗЫК
-// ============================================
+// ========================================
+// СОСТОЯНИЕ ПРИЛОЖЕНИЯ
+// ========================================
+
+let currentLanguage = localStorage.getItem('tainaLanguage') || 'ru';
+let loginMode = false;
+let currentUser = null;
+let currentUserData = null;
+let currentPoint = null;
+let selectedAnswer = null;
+let answerSubmitted = false;
+let pendingPoint = getPointFromURL();
+
+// Координаты можно будет добавить позже.
+// Пока GPS-проверка не включена.
+const POINT_COORDINATES = Array(15).fill(null);
+
+// ========================================
+// ПЕРЕВОДЫ ИНТЕРФЕЙСА
+// ========================================
+
+const UI = {
+ru:{
+  authTitle:'Начни своё путешествие',
+  authDescription:'Зарегистрируйся, чтобы следовать за Вифлеемской звездой и сохранять свой прогресс.',
+  name:'Твоё имя',email:'Электронная почта',password:'Пароль',
+  register:'Зарегистрироваться',login:'Войти',
+  switchLogin:'Уже есть аккаунт? Войти',
+  switchRegister:'Нет аккаунта? Зарегистрироваться',
+  welcome:'Добро пожаловать',logout:'Выйти',
+  progress:'Твой путь',adventure:'Следуй за звездой',
+  adventureText:'Впереди тебя ждут 15 звёзд. Найди следующую звезду на маршруте и отсканируй её QR-код.',
+  next:'Твоя следующая звезда',find:'Найди QR-код этой звезды в городе.',
+  qrNotice:'Каждая звезда открывается только после прохождения предыдущей.',
+  question:'Вопрос',hint:'Показать подсказку',check:'Проверить ответ',
+  continue:'Продолжить путь',back:'Вернуться к карте',
+  bible:'Прочитать библейский отрывок',
+  finalTitle:'ТЫ НАШЁЛ ЗВЕЗДУ!',
+  finalText:'Ты прошёл весь путь. От древнего обещания до рождения Иисуса Христа. Но самое главное сокровище этого путешествия — не найденные звёзды, а истина, которую они открывали. Бог так возлюбил мир, что отдал Своего Сына. Теперь приглашаем тебя разделить радость Рождества вместе с нами!',
+  finalInvite:'Ждём тебя на рождественском празднике!',
+  progressStart:'Ты только начинаешь своё путешествие.',
+  progressMore:'Ты прошёл {n} из 15 звёзд. Продолжай следовать за звездой!',
+  progressDone:'Все 15 звёзд найдены!',
+  correct:'Правильно! Молодец!',
+  wrong:'Пока неверно. Попробуй ещё раз или воспользуйся подсказкой.',
+  locked:'Эта звезда пока закрыта. Сначала найди и пройди предыдущую звезду.',
+  invalid:'Номер звезды указан неправильно.',
+  needLogin:'Сначала войди или зарегистрируйся, чтобы сохранить прогресс.',
+  hintLabel:'Подсказка',
+  explanation:'Объяснение',
+  authError:'Не удалось выполнить вход. Проверь данные и попробуй ещё раз.',
+  emailUsed:'Этот адрес электронной почты уже зарегистрирован. Попробуй войти.',
+  weakPassword:'Пароль должен содержать не менее 6 символов.',
+  badEmail:'Проверь правильность адреса электронной почты.',
+  noUser:'Аккаунт с таким адресом не найден.',
+  wrongPassword:'Неверный пароль.',
+  permission:'Нет доступа к базе данных. Проверь правила Firebase Firestore.',
+  nameRequired:'Введи своё имя.',
+  saving:'Сохраняем прогресс…',
+  saveError:'Не удалось сохранить ответ. Проверь подключение и попробуй ещё раз.'
+},
+et:{
+  authTitle:'Alusta oma teekonda',
+  authDescription:'Registreeru, et järgneda Petlemma tähele ja salvestada oma edusammud.',
+  name:'Sinu nimi',email:'E-posti aadress',password:'Parool',
+  register:'Registreeru',login:'Logi sisse',
+  switchLogin:'Sul on juba konto? Logi sisse',
+  switchRegister:'Kontot pole? Registreeru',
+  welcome:'Tere tulemast',logout:'Logi välja',
+  progress:'Sinu teekond',adventure:'Järgne tähele',
+  adventureText:'Sind ootab 15 tähte. Leia marsruudilt järgmine täht ja skaneeri selle QR-kood.',
+  next:'Sinu järgmine täht',find:'Leia selle tähe QR-kood linnast.',
+  qrNotice:'Iga täht avaneb alles pärast eelmise läbimist.',
+  question:'Küsimus',hint:'Näita vihjet',check:'Kontrolli vastust',
+  continue:'Jätka teekonda',back:'Tagasi kaardile',
+  bible:'Loe piibliteksti',
+  finalTitle:'LEIDSID TÄHE!',
+  finalText:'Oled läbinud kogu teekonna. Alates muistsest tõotusest kuni Jeesuse Kristuse sünnini. Kuid selle teekonna kõige suurem aare ei ole leitud tähed, vaid tõde, mida need avasid. Jumal on maailma nõnda armastanud, et Ta andis oma Poja. Nüüd kutsume sind koos meiega jõulurõõmu jagama!',
+  finalInvite:'Ootame sind jõulupeole!',
+  progressStart:'Sinu teekond alles algab.',
+  progressMore:'Oled läbinud {n} tähte 15-st. Jätka tähele järgnemist!',
+  progressDone:'Kõik 15 tähte on leitud!',
+  correct:'Õige! Tubli!',
+  wrong:'Praegu ei ole õige vastus. Proovi uuesti või kasuta vihjet.',
+  locked:'See täht on veel suletud. Kõigepealt leia ja läbi eelmine täht.',
+  invalid:'Tähe number ei ole õige.',
+  needLogin:'Oma edusammude salvestamiseks logi sisse või registreeru.',
+  hintLabel:'Vihje',
+  explanation:'Selgitus',
+  authError:'Sisselogimine ebaõnnestus. Kontrolli andmeid ja proovi uuesti.',
+  emailUsed:'See e-posti aadress on juba registreeritud. Proovi sisse logida.',
+  weakPassword:'Parool peab sisaldama vähemalt 6 märki.',
+  badEmail:'Kontrolli e-posti aadressi.',
+  noUser:'Sellise e-posti aadressiga kontot ei leitud.',
+  wrongPassword:'Vale parool.',
+  permission:'Andmebaasile puudub ligipääs. Kontrolli Firebase Firestore reegleid.',
+  nameRequired:'Sisesta oma nimi.',
+  saving:'Salvestame edusamme…',
+  saveError:'Vastuse salvestamine ebaõnnestus. Kontrolli ühendust ja proovi uuesti.'
+}
+};
+
+function t(key){
+  return UI[currentLanguage][key] || UI.ru[key] || key;
+}
+
 function setLanguage(lang){
-currentLanguage=lang;
-localStorage.setItem('questLanguage',lang);
-const t=T[lang];
-document.documentElement.lang=lang;
-document.getElementById('name').textContent=t.name;
-document.getElementById('title').innerHTML=t.title;
-document.getElementById('subtitle').textContent=t.subtitle;
-document.getElementById('description').innerHTML=t.description;
-document.getElementById('footer').textContent=t.footer;
-document.getElementById('etButton').classList.toggle('active',lang==='et');
-document.getElementById('ruButton').classList.toggle('active',lang==='ru');
-document.getElementById('formTitle').textContent=mode==='register'?t.register:t.login;
-document.getElementById('fullNameLabel').textContent=t.fullName;
-document.getElementById('emailLabel').textContent=t.email;
-document.getElementById('passwordLabel').textContent=t.password;
-document.getElementById('confirmLabel').textContent=t.confirm;
-document.getElementById('submitButton').textContent=mode==='register'?t.create:t.enter;
-document.getElementById('switchButton').textContent=mode==='register'?t.switchLogin:t.switchRegister;
-document.getElementById('nameField').classList.toggle('hidden',mode!=='register');
-document.getElementById('confirmField').classList.toggle('hidden',mode!=='register');
-document.getElementById('welcomeText').textContent=t.welcomeText;
-document.getElementById('progressLabel').textContent=t.progress;
-document.getElementById('adventureTitle').textContent=t.adventureTitle;
-document.getElementById('adventureSubtitle').textContent=t.adventureSubtitle;
-document.getElementById('mapNoteTitle').textContent=t.mapNoteTitle;
-document.getElementById('mapNoteText').textContent=t.mapNoteText;
-document.getElementById('logoutButton').textContent=t.logout;
-document.getElementById('homeButton').textContent=t.home;
-document.getElementById('nextButton').textContent=t.next;
-document.getElementById('bibleLink').textContent=t.bible;
-document.getElementById('finalTitle').textContent=t.finalTitle;
-document.getElementById('finalText').textContent=t.finalText;
-document.getElementById('finalDate').textContent=t.finalDate;
-document.getElementById('finalAddress').textContent=t.finalAddress;
-document.getElementById('finalInvite').textContent=t.finalInvite;
-if(currentUserData){
-renderParticipantHome();
-if(currentPoint!==null && currentPoint>=1 && currentPoint<=15 && currentPoint<=getCompleted()+1){
-renderPoint(currentPoint);
-}
-}
+  currentLanguage = lang === 'et' ? 'et' : 'ru';
+  localStorage.setItem('tainaLanguage',currentLanguage);
+  document.documentElement.lang = currentLanguage;
+
+  document.getElementById('ruButton').classList.toggle('active',currentLanguage==='ru');
+  document.getElementById('etButton').classList.toggle('active',currentLanguage==='et');
+
+  const ids = {
+    authTitle:'authTitle',authDescription:'authDescription',
+    nameLabel:'name',emailLabel:'email',passwordLabel:'password',
+    welcomeLabel:'welcome',logoutButton:'logout',
+    progressLabel:'progress',adventureTitle:'adventure',
+    adventureText:'adventureText',nextPointTitle:'next',
+    nextPointDescription:'find',qrNotice:'qrNotice',
+    questionTitle:'question',hintButton:'hint',
+    answerButton:'check',continueButton:'continue',
+    backButton:'back',bibleLink:'bible',
+    finalTitle:'finalTitle',finalText:'finalText',
+    finalInvite:'finalInvite'
+  };
+
+  Object.entries(ids).forEach(([id,key])=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=t(key);
+  });
+
+  document.getElementById('authSubmit').textContent =
+    loginMode ? t('login') : t('register');
+  document.getElementById('switchAuth').textContent =
+    loginMode ? t('switchRegister') : t('switchLogin');
+
+  if(currentUserData){
+    const wasFinal = completedCount() >= 15;
+    const savedPoint = currentPoint;
+    renderParticipantHome();
+
+    if(wasFinal){
+      showFinal();
+    }else if(savedPoint !== null && savedPoint < POINTS.length){
+      renderPoint(savedPoint);
+    }
+  }
+
+  if(pendingPoint !== null && currentUserData){
+    handlePendingPoint();
+  }
 }
 
-// ============================================
+// ========================================
 // РЕГИСТРАЦИЯ И ВХОД
-// ============================================
-function switchMode(){
-mode=mode==='register'?'login':'register';
-document.getElementById('authForm').reset();
-document.getElementById('message').textContent='';
-setLanguage(currentLanguage);
-}
-function showError(error){
-console.error(error);
-const t=T[currentLanguage];
-let code=error.code||'unknown';
-if(code.includes('permission-denied'))code='permission-denied';
-document.getElementById('message').textContent='Ошибка: '+(t.errors[code]||t.defaultError);
-}
-document.getElementById('authForm').addEventListener('submit',async e=>{
-e.preventDefault();
-const t=T[currentLanguage];
-const email=document.getElementById('email').value.trim();
-const password=document.getElementById('password').value;
-const button=document.getElementById('submitButton');
-button.disabled=true;
-document.getElementById('message').textContent='';
-try{
-if(mode==='register'){
-const fullName=document.getElementById('fullName').value.trim();
-if(fullName.length<2){document.getElementById('message').textContent=currentLanguage==='ru'?'Введи имя и фамилию.':'Sisesta ees- ja perekonnanimi.';return;}
-if(password!==document.getElementById('confirmPassword').value){document.getElementById('message').textContent=currentLanguage==='ru'?'Пароли не совпадают.':'Paroolid ei ühti.';return;}
-const credential=await auth.createUserWithEmailAndPassword(email,password);
-await db.collection('users').doc(credential.user.uid).set({
-fullName,email:credential.user.email,language:currentLanguage,completedPoints:0,
-createdAt:firebase.firestore.FieldValue.serverTimestamp()
-});
-}else{
-await auth.signInWithEmailAndPassword(email,password);
-}
-}catch(error){showError(error);}
-finally{button.disabled=false;}
-});
+// ========================================
 
-// ============================================
-// ПРОГРЕСС И КАРТА
-// ============================================
-function getCompleted(){
-return Math.max(0,Math.min(15,Number(currentUserData?.completedPoints)||0));
-}
-function renderParticipantHome(){
-if(!currentUserData)return;
-const t=T[currentLanguage];
-const completed=getCompleted();
-document.getElementById('progressNumber').textContent=completed+' / 15';
-document.getElementById('progressFill').style.width=(completed/15*100)+'%';
-document.getElementById('welcomeTitle').textContent=t.welcome+(currentUserData.fullName?' '+currentUserData.fullName:'');
-const grid=document.getElementById('starsGrid');
-grid.innerHTML='';
-const adventure=document.getElementById('adventure');
-const story=document.getElementById('storyPanel');
-const final=document.getElementById('finalPanel');
-if(completed===15){
-adventure.classList.add('hidden');
-story.classList.add('hidden');
-final.classList.remove('hidden');
-currentPoint=null;
-return;
-}
-final.classList.add('hidden');
-if(currentPoint===null)story.classList.add('hidden');
-adventure.classList.remove('hidden');
-const next=completed+1;
-const button=document.createElement('button');
-button.type='button';
-button.className='point';
-button.innerHTML='<span class="point-symbol">✦</span><span class="point-number">'+String(next).padStart(2,'0')+'</span><span class="point-status">'+t.available+'</span>';
-button.addEventListener('click',()=>openPoint(next));
-grid.appendChild(button);
+function toggleAuthMode(){
+  loginMode=!loginMode;
+  document.getElementById('nameField').classList.toggle('hidden',loginMode);
+  document.getElementById('authSubmit').textContent=loginMode?t('login'):t('register');
+  document.getElementById('switchAuth').textContent=loginMode?t('switchRegister'):t('switchLogin');
+  document.getElementById('authError').textContent='';
 }
 
-// ============================================
-// ОТКРЫТИЕ QR И ИСТОРИЙ
-// ============================================
-function openPoint(number){
-if(!currentUserData)return;
-if(!Number.isInteger(number)||number<1||number>15)return;
-if(number>getCompleted()+1){
-document.getElementById('userMessage').textContent=currentLanguage==='ru'?'Эта звезда пока закрыта. Сначала пройди предыдущую.':'See täht on veel suletud. Läbi kõigepealt eelmine punkt.';
-return;
-}
-renderPoint(number);
-}
-function renderPoint(number){
-const p=POINTS[number-1];
-if(!p)return;
-currentPoint=number;
-answerSubmitted=getCompleted()>=number;
-const data=p[currentLanguage];
-const t=T[currentLanguage];
-document.getElementById('adventure').classList.add('hidden');
-document.getElementById('finalPanel').classList.add('hidden');
-document.getElementById('storyPanel').classList.remove('hidden');
-document.getElementById('storyNumber').textContent=t.point+' '+String(number).padStart(2,'0')+' / 15';
-document.getElementById('storyTitle').textContent=data.title;
-document.getElementById('storyReference').textContent=p.ref;
-document.getElementById('storyText').textContent=data.story;
-document.getElementById('bibleLink').href='https://www.bible.com/search/bible?query='+encodeURIComponent(p.ref);
-document.getElementById('questionText').textContent=data.q;
-document.getElementById('hintBox').textContent=t.hint+': '+data.hint;
-document.getElementById('hintBox').classList.add('hidden');
-document.getElementById('explanationBox').textContent=data.explain;
-document.getElementById('explanationBox').classList.toggle('hidden',!answerSubmitted);
-document.getElementById('homeButton').classList.remove('hidden');
-document.getElementById('nextButton').classList.toggle('hidden',!answerSubmitted);
-const answers=document.getElementById('answers');
-answers.innerHTML='';
-data.a.forEach((answer,index)=>{
-const btn=document.createElement('button');
-btn.type='button';
-btn.className='answer';
-btn.textContent=String.fromCharCode(65+index)+'. '+answer;
-if(answerSubmitted){
-btn.disabled=true;
-if(index===data.correct)btn.classList.add('correct');
-}else{
-btn.addEventListener('click',()=>checkAnswer(index));
-}
-answers.appendChild(btn);
+document.getElementById('authForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+  const fullName=document.getElementById('fullName').value.trim();
+  const errorEl=document.getElementById('authError');
+
+  errorEl.textContent='';
+
+  try{
+    if(loginMode){
+      await auth.signInWithEmailAndPassword(email,password);
+    }else{
+      if(!fullName){
+        errorEl.textContent=t('nameRequired');
+        return;
+      }
+
+      const credential=await auth.createUserWithEmailAndPassword(email,password);
+      await db.collection('users').doc(credential.user.uid).set({
+        fullName:fullName,
+        email:email,
+        language:currentLanguage,
+        completedPoints:0,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      },{merge:true});
+    }
+  }catch(error){
+    errorEl.textContent=getAuthError(error);
+  }
 });
-if(!answerSubmitted){
-const hintButton=document.createElement('button');
-hintButton.type='button';
-hintButton.className='secondary';
-hintButton.textContent=currentLanguage==='ru'?'Показать подсказку':'Näita vihjet';
-hintButton.onclick=()=>document.getElementById('hintBox').classList.remove('hidden');
-answers.appendChild(hintButton);
-}
-}
-async function checkAnswer(selected){
-if(answerSubmitted||currentPoint===null)return;
-const p=POINTS[currentPoint-1];
-const data=p[currentLanguage];
-const buttons=document.querySelectorAll('#answers .answer');
-if(selected!==data.correct){
-buttons[selected].classList.add('wrong');
-document.getElementById('userMessage').textContent=T[currentLanguage].wrong;
-document.getElementById('hintBox').classList.remove('hidden');
-return;
-}
-buttons.forEach((button,index)=>{
-button.disabled=true;
-if(index===data.correct)button.classList.add('correct');
-});
-try{
-const ref=db.collection('users').doc(auth.currentUser.uid);
-const result=await db.runTransaction(async transaction=>{
-const snap=await transaction.get(ref);
-if(!snap.exists)throw new Error('profile-not-found');
-const old=Math.max(0,Number(snap.data().completedPoints)||0);
-const updated=Math.max(old,currentPoint);
-if(updated!==old)transaction.update(ref,{completedPoints:updated});
-return updated;
-});
-currentUserData.completedPoints=result;
-answerSubmitted=true;
-document.getElementById('explanationBox').textContent=data.explain;
-document.getElementById('explanationBox').classList.remove('hidden');
-document.getElementById('hintBox').classList.add('hidden');
-document.getElementById('nextButton').classList.remove('hidden');
-document.getElementById('userMessage').textContent=T[currentLanguage].correct;
-renderParticipantHome();
-if(currentPoint===15){
-document.getElementById('storyPanel').classList.add('hidden');
-document.getElementById('finalPanel').classList.remove('hidden');
-}else{
-document.getElementById('adventure').classList.add('hidden');
-document.getElementById('storyPanel').classList.remove('hidden');
-}
-}catch(error){
-console.error(error);
-document.getElementById('userMessage').textContent=currentLanguage==='ru'?'Не удалось сохранить ответ. Проверь интернет и попробуй ещё раз.':'Vastuse salvestamine ebaõnnestus. Kontrolli internetti ja proovi uuesti.';
-}
-}
-function showHome(){
-currentPoint=null;
-document.getElementById('storyPanel').classList.add('hidden');
-document.getElementById('finalPanel').classList.add('hidden');
-renderParticipantHome();
-}
-function handleQR(){
-const params=new URLSearchParams(location.search);
-const raw=params.get('point');
-if(!raw)return;
-const number=Number(raw);
-if(!Number.isInteger(number)||number<1||number>15)return;
-if(!currentUserData)return;
-if(number<=getCompleted()+1)openPoint(number);
-else document.getElementById('userMessage').textContent=currentLanguage==='ru'?'Эта звезда пока закрыта. Пройди предыдущие точки по порядку.':'See täht on veel suletud. Läbi eelmised punktid järjekorras.';
+
+function getAuthError(error){
+  const code=error.code || '';
+  if(code.includes('email-already-in-use')) return t('emailUsed');
+  if(code.includes('weak-password')) return t('weakPassword');
+  if(code.includes('invalid-email')) return t('badEmail');
+  if(code.includes('user-not-found')) return t('noUser');
+  if(code.includes('wrong-password') || code.includes('invalid-credential')) return t('wrongPassword');
+  if(code.includes('permission-denied')) return t('permission');
+  return t('authError')+' ('+code+')';
 }
 
-// ============================================
-// ВОССТАНОВЛЕНИЕ ПРОФИЛЯ
-// ============================================
+// ========================================
+// СОСТОЯНИЕ ПОЛЬЗОВАТЕЛЯ
+// ========================================
+
 auth.onAuthStateChanged(async user=>{
-const authPanel=document.getElementById('authPanel');
-const userPanel=document.getElementById('userPanel');
-document.getElementById('userMessage').textContent='';
-currentUserData=null;
-currentPoint=null;
-if(!user){
-authPanel.classList.remove('hidden');
-userPanel.classList.add('hidden');
-return;
-}
-try{
-const doc=await db.collection('users').doc(user.uid).get();
-if(!doc.exists){
-currentUserData={fullName:user.displayName||'',completedPoints:0};
-document.getElementById('userMessage').textContent=currentLanguage==='ru'?'Профиль не найден. Обратись к организатору.':'Profiili ei leitud. Võta korraldajaga ühendust.';
-}else{
-currentUserData=doc.data();
-}
-document.getElementById('userEmail').textContent=user.email||'';
-authPanel.classList.add('hidden');
-userPanel.classList.remove('hidden');
-renderParticipantHome();
-handleQR();
-}catch(error){
-console.error(error);
-document.getElementById('userMessage').textContent='Ошибка загрузки профиля: '+(error.code||error.message);
-authPanel.classList.add('hidden');
-userPanel.classList.remove('hidden');
-}
+  currentUser=user;
+
+  if(!user){
+    currentUserData=null;
+    document.getElementById('authPanel').classList.remove('hidden');
+    document.getElementById('userPanel').classList.add('hidden');
+    return;
+  }
+
+  try{
+    const doc=await db.collection('users').doc(user.uid).get();
+
+    if(doc.exists){
+      currentUserData=doc.data();
+    }else{
+      // Если документ отсутствует, создаём его,
+      // не затрагивая другие аккаунты.
+      currentUserData={
+        fullName:user.displayName || user.email.split('@')[0],
+        email:user.email,
+        completedPoints:0
+      };
+      await db.collection('users').doc(user.uid).set(currentUserData,{merge:true});
+    }
+
+    if(typeof currentUserData.completedPoints!=='number'){
+      currentUserData.completedPoints=0;
+    }
+
+    document.getElementById('authPanel').classList.add('hidden');
+    document.getElementById('userPanel').classList.remove('hidden');
+
+    renderParticipantHome();
+
+    if(pendingPoint!==null) handlePendingPoint();
+
+  }catch(error){
+    document.getElementById('authPanel').classList.remove('hidden');
+    document.getElementById('authError').textContent=
+      error.code && error.code.includes('permission-denied')
+      ? t('permission')
+      : t('authError')+' ('+(error.code||'')+')';
+  }
 });
-async function logout(){
-try{await auth.signOut();}
-catch(error){showError(error);}
+
+function completedCount(){
+  return Math.max(0,Math.min(15,Number(currentUserData?.completedPoints)||0));
 }
+
+function logout(){
+  auth.signOut();
+}
+
+// ========================================
+// ГЛАВНАЯ СТРАНИЦА УЧАСТНИКА
+// ========================================
+
+function renderParticipantHome(){
+  if(!currentUserData) return;
+
+  const count=completedCount();
+
+  document.getElementById('welcomeName').textContent=
+    currentUserData.fullName || currentUser?.email || '';
+
+  document.getElementById('progressCount').textContent=count+' / 15';
+  document.getElementById('progressFill').style.width=(count/15*100)+'%';
+
+  if(count===0){
+    document.getElementById('progressText').textContent=t('progressStart');
+  }else if(count===15){
+    document.getElementById('progressText').textContent=t('progressDone');
+  }else{
+    document.getElementById('progressText').textContent=
+      t('progressMore').replace('{n}',count);
+  }
+
+  currentPoint=null;
+
+  if(count>=15){
+    document.getElementById('adventure').classList.add('hidden');
+    document.getElementById('storyPanel').classList.add('hidden');
+    showFinal();
+    return;
+  }
+
+  document.getElementById('finalPanel').classList.add('hidden');
+  document.getElementById('storyPanel').classList.add('hidden');
+  document.getElementById('adventure').classList.remove('hidden');
+
+  const next=count+1;
+  document.getElementById('nextPointNumber').textContent=
+    (currentLanguage==='ru'?'ЗВЕЗДА ':'TÄHT ')+String(next).padStart(2,'0');
+}
+
+// ========================================
+// QR-КОДЫ
+// Формат ссылки: сайт/?point=01
+// ========================================
+
+function getPointFromURL(){
+  const params=new URLSearchParams(window.location.search);
+  const value=params.get('point');
+  if(!value) return null;
+
+  const number=parseInt(value,10);
+  if(!Number.isInteger(number) || number<1 || number>15) return -1;
+  return number-1;
+}
+
+function handlePendingPoint(){
+  if(pendingPoint===null || !currentUserData) return;
+
+  const point=pendingPoint;
+  pendingPoint=null;
+
+  if(point<0){
+    alert(t('invalid'));
+    return;
+  }
+
+  openPoint(point);
+}
+
+function openPoint(index){
+  if(!currentUserData){
+    alert(t('needLogin'));
+    return;
+  }
+
+  if(index<0 || index>=POINTS.length){
+    alert(t('invalid'));
+    return;
+  }
+
+  const completed=completedCount();
+
+  // Разрешена только следующая ещё не пройденная точка.
+  if(index>completed){
+    alert(t('locked'));
+    return;
+  }
+
+  if(index<completed){
+    // Уже пройденная точка доступна для повторного чтения.
+    renderPoint(index);
+    return;
+  }
+
+  renderPoint(index);
+}
+
+function renderPoint(index){
+  const point=POINTS[index];
+  if(!point) return;
+
+  currentPoint=index;
+  selectedAnswer=null;
+  answerSubmitted=false;
+
+  const content=point[currentLanguage];
+
+  document.getElementById('adventure').classList.add('hidden');
+  document.getElementById('finalPanel').classList.add('hidden');
+  document.getElementById('storyPanel').classList.remove('hidden');
+
+  document.getElementById('storyPointNumber').textContent=
+    (currentLanguage==='ru'?'ЗВЕЗДА ':'TÄHT ')+String(index+1).padStart(2,'0');
+  document.getElementById('storyTitle').textContent=content.title;
+  document.getElementById('storyReference').textContent=point.ref;
+  document.getElementById('storyText').textContent=content.story;
+  document.getElementById('questionText').textContent=content.question;
+
+  const bibleUrl='https://www.bible.com/search/bible?query='+
+    encodeURIComponent(point.bible);
+  const link=document.getElementById('bibleLink');
+  link.href=bibleUrl;
+  link.textContent=t('bible');
+
+  const options=document.getElementById('options');
+  options.innerHTML='';
+
+  content.options.forEach((option,i)=>{
+    const button=document.createElement('button');
+    button.className='option';
+    button.type='button';
+    button.textContent=String.fromCharCode(65+i)+'. '+option;
+    button.addEventListener('click',()=>selectOption(i));
+    options.appendChild(button);
+  });
+
+  document.getElementById('hintBox').classList.add('hidden');
+  document.getElementById('hintBox').textContent='';
+  document.getElementById('feedback').classList.add('hidden');
+  document.getElementById('continueButton').classList.add('hidden');
+  document.getElementById('answerButton').classList.remove('hidden');
+  document.getElementById('answerButton').disabled=true;
+  document.getElementById('hintButton').disabled=false;
+  document.getElementById('hintButton').classList.remove('hidden');
+
+  // Пройденную точку можно перечитать, но не нужно отвечать снова.
+  if(index<completedCount()){
+    document.getElementById('answerButton').classList.add('hidden');
+    document.getElementById('hintButton').classList.add('hidden');
+    const feedback=document.getElementById('feedback');
+    feedback.classList.remove('hidden');
+    feedback.className='feedback success';
+    feedback.textContent=t('correct')+' '+content.explanation;
+  }
+}
+
+function selectOption(index){
+  if(answerSubmitted) return;
+
+  selectedAnswer=index;
+  const buttons=document.querySelectorAll('#options .option');
+
+  buttons.forEach((button,i)=>{
+    button.classList.toggle('selected',i===index);
+  });
+
+  document.getElementById('answerButton').disabled=false;
+}
+
+function showHint(){
+  if(currentPoint===null) return;
+
+  const content=POINTS[currentPoint][currentLanguage];
+  const box=document.getElementById('hintBox');
+
+  box.textContent=t('hintLabel')+': '+content.hint;
+  box.classList.remove('hidden');
+}
+
+// ========================================
+// ПРОВЕРКА И СОХРАНЕНИЕ ОТВЕТА
+// ========================================
+
+async function checkAnswer(){
+  if(currentPoint===null || selectedAnswer===null || answerSubmitted) return;
+
+  const pointIndex=currentPoint;
+  const point=POINTS[pointIndex];
+  const content=point[currentLanguage];
+  const feedback=document.getElementById('feedback');
+  const buttons=document.querySelectorAll('#options .option');
+
+  if(selectedAnswer!==point.correct){
+    buttons[selectedAnswer].classList.add('wrong');
+    feedback.className='feedback error';
+    feedback.textContent=t('wrong');
+    feedback.classList.remove('hidden');
+    return;
+  }
+
+  answerSubmitted=true;
+  buttons[selectedAnswer].classList.add('correct');
+  document.getElementById('answerButton').disabled=true;
+  document.getElementById('hintButton').disabled=true;
+  feedback.className='feedback success';
+  feedback.textContent=t('saving');
+  feedback.classList.remove('hidden');
+
+  try{
+    const userRef=db.collection('users').doc(currentUser.uid);
+
+    await db.runTransaction(async transaction=>{
+      const snapshot=await transaction.get(userRef);
+      const data=snapshot.exists?snapshot.data():{};
+      const saved=Math.max(0,Number(data.completedPoints)||0);
+
+      // Если другой запрос уже сохранил эту точку,
+      // не уменьшаем и не перезаписываем прогресс.
+      if(saved>pointIndex) return;
+
+      // Нельзя завершить точку, пропустив предыдущую.
+      if(saved!==pointIndex){
+        throw new Error('POINT_ORDER');
+      }
+
+      transaction.set(userRef,{
+        completedPoints:pointIndex+1,
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      },{merge:true});
+    });
+
+    const updated=await userRef.get();
+    currentUserData=updated.data();
+
+    feedback.className='feedback success';
+    feedback.textContent=t('correct')+'\n\n'+
+      t('explanation')+': '+content.explanation;
+
+    document.getElementById('answerButton').classList.add('hidden');
+    document.getElementById('continueButton').classList.remove('hidden');
+
+  }catch(error){
+    answerSubmitted=false;
+    document.getElementById('answerButton').disabled=false;
+    document.getElementById('hintButton').disabled=false;
+
+    feedback.className='feedback error';
+    feedback.textContent=
+      error.message==='POINT_ORDER'
+      ? t('locked')
+      : t('saveError')+' ('+(error.code||error.message||'')+')';
+  }
+}
+
+function continueAfterAnswer(){
+  renderParticipantHome();
+
+  if(completedCount()>=15){
+    showFinal();
+  }else{
+    document.getElementById('storyPanel').classList.add('hidden');
+    document.getElementById('adventure').classList.remove('hidden');
+  }
+}
+
+function showHome(){
+  currentPoint=null;
+  document.getElementById('storyPanel').classList.add('hidden');
+  document.getElementById('finalPanel').classList.add('hidden');
+  document.getElementById('adventure').classList.remove('hidden');
+  renderParticipantHome();
+}
+
+function showFinal(){
+  document.getElementById('adventure').classList.add('hidden');
+  document.getElementById('storyPanel').classList.add('hidden');
+  document.getElementById('finalPanel').classList.remove('hidden');
+
+  document.getElementById('finalTitle').textContent=t('finalTitle');
+  document.getElementById('finalText').textContent=t('finalText');
+  document.getElementById('finalInvite').textContent=t('finalInvite');
+}
+
+// ========================================
+// ЗАПУСК
+// ========================================
+
 setLanguage(currentLanguage);
 </script>
 </body>
